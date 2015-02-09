@@ -1,0 +1,29 @@
+{% extends 'index.html' %}
+{% block encabezado %}Actualizar usuario{% endblock %} 
+
+{% block contenido %}
+<script>
+    function valores() {
+        document.getElementById("id_username").value="{{objeto.username}}";
+        document.getElementById("id_password").value="{{objeto.password}}";
+        document.getElementById("id_first_name").value="{{objeto.first_name}}";
+        document.getElementById("id_last_name").value="{{objeto.last_name}}";
+        document.getElementById("id_email").value="{{objeto.email}}";
+    }
+    function mayusculas() {
+        document.getElementById("id_nombre_victima").value = document.getElementById("id_nombre_victima").value.toUpperCase();
+        document.getElementById("id_nombre_declara").value = document.getElementById("id_nombre_declara").value.toUpperCase();
+    }
+</script>
+
+<div id="formdiv">
+    <body onload="valores()" onchange="mayusculas()" onfocus="mayusculas()"> 
+        <form action="" method="post">{% csrf_token %}
+
+            {{ form.as_p }}
+
+            <button>Guardar</button>               
+        </form>
+    </body> 
+</div>
+{% endblock %}

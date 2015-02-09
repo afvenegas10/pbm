@@ -1,0 +1,45 @@
+{% extends 'index.html' %}
+{% block encabezado %}Registrar fuid{% endblock %}
+{% block contenido %}
+<script>
+    function mayusculas() {
+        document.getElementById("id_num_serie_sub_asuntos").value = document.getElementById("id_num_serie_sub_asuntos").value.toUpperCase();
+    }
+    function borra(nota) {
+        setTimeout("borrar('"+nota+"')",2500);
+    }
+
+    function borrar(nota) {
+        document.getElementById("nota_"+nota).innerHTML="";
+    }    
+
+    function obligatorios() {
+        var text = document.querySelector("label[for='id_num_orden']").innerHTML;
+        document.querySelector("label[for='id_num_orden']").innerHTML = "<font color='red'>* </font>" + text;
+    }
+
+</script>
+
+<div id="formdiv">
+    <body onchange="mayusculas()" onfocus="mayusculas()" onload="obligatorios()"> 
+        <form action="" method="post">{% csrf_token %}
+
+            {% if message %}
+            <div id="error_message">{{ message }}</div>
+            {% endif %}
+
+            {{ form.as_p }}
+
+            <font id="nota">
+                <br><b>Nota:</b> Por favor tenga en ecuenta lo siguiente, al momento de guardar.
+                <p>
+                    <li type="disc">Los campos denotados con "*" , son de caracter obligatorio.</li>
+                    <li type="disc">El "numero de orden" es unico.</li>   
+                </p>
+            </font>
+
+            <button>Guardar</button>               
+        </form>
+    </body> 
+</div>
+{% endblock %}

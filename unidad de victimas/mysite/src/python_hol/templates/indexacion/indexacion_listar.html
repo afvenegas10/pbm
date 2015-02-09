@@ -1,0 +1,62 @@
+{% extends 'index.html' %} 
+{% block encabezado %}Lista de registros de indexaciones{% endblock %} 
+
+{% block contenido %}
+<div id="formdiv">
+    <a href="/indexacion/registrar/" class="addlink">Nuevo registro de indexacion.</a><br> 
+    {% if object_list %}
+    <table id="lista_tabla">
+        <tr>
+            <th>CODIGO CAJA</th>
+            <th>CODIGO CARPETA</th>
+            <th>FOLIOS</th>
+            <th>NUMERO RADICADO</th>
+            <th>IDENTIFICACION VICTIMA</th>
+            <th>NOMBRE VICTIMA</th>
+            <th>IDENTIFICACION DECLARANTE</th>
+            <th>NOMBRE DECLARANTE</th>
+        </tr>
+        {% for RIndexacion in object_list %}
+        <tr>
+            <td>{% if not RIndexacion.cod_caja  == None %}{{RIndexacion.cod_caja}}{% else %}{% endif %}</td>
+            <td>{% if not RIndexacion.cod_carpeta  == None %}{{RIndexacion.cod_carpeta}}{% else %}{% endif %}</td>
+            <td>{% if not RIndexacion.folios  == None %}{{RIndexacion.folios}}{% else %}{% endif %}</td>
+            <td><a href="/desargar/{{ RIndexacion.num_radicado}}.pdf">{% if not RIndexacion.num_radicado  == None %}{{RIndexacion.num_radicado}}{% else %}{% endif %}</a></td>
+            <td>{% if not RIndexacion.id_victima  == None %}{{RIndexacion.id_victima}}{% else %}{% endif %}</td>
+            <td>{% if not RIndexacion.nombre_victima  == None %}{{RIndexacion.nombre_victima}}{% else %}{% endif %}</td>
+            <td>{% if not RIndexacion.id_declara  == None %}{{RIndexacion.id_declara }}{% else %}{% endif %}</td>
+            <td>{% if not RIndexacion.nombre_declara  == None %}{{RIndexacion.nombre_declara }}{% else %}{% endif %}</td>
+            <td><a href="/indexacion/actualizar/{{RIndexacion.cod_carpeta}}/">editar</a></td>
+            <td><a href="/indexacion/borrar/{{RIndexacion.cod_carpeta}}/">borrar</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <p>No se encontro ninguna indexacion</p>
+    {% endif %}
+
+    <!-- paguinacion -->
+    {% if is_paginated %}
+    <div class="pagination">
+        <span class="page-links"> 
+            {% if page_obj.has_previous %} 
+            <a href="/indexacion/listar?page={{ page_obj.previous_page_number }}">Anterior</a>
+            {% endif %} 
+            <span class="page-current"> Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}. </span> 
+            {% if page_obj.has_next %} 
+            <a href="/indexacion/listar?page={{ page_obj.next_page_number }}">Siguiente</a>
+            {% endif %}
+        </span>
+    </div>
+    {% endif %} 
+
+    {% if error_message %}
+    <div id="error_message">{{ error_message }}</div>
+    {% endif %}
+    <br>
+    <font id="nota">        
+        <b>Nota: </b> para descargar los archivos digitalizados, seleccione el numero de radicado.
+        <br>
+    </font>
+</div>
+{% endblock %}

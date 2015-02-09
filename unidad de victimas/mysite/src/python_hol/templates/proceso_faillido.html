@@ -1,0 +1,14 @@
+{% extends 'index.html' %} 
+{% block encabezado %}Proceso faillido{%endblock %} 
+{% block contenido %} 
+{% if message %}
+<div id="formdiv">
+    <p>Su procedo de "{{ message }}" no pudo ser completado.</p>
+    {% if error_message %}
+    <div id="error_message">{{ error_message }}</div>
+    <br> 
+    {% endif %}
+    <button onclick="location.href='/'">Continuar</button>
+</div>
+{% endif %}
+{% endblock %}

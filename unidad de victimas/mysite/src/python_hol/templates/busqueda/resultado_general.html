@@ -1,0 +1,121 @@
+{% extends 'busqueda/busqueda_general.html' %}
+
+{% block resultadoGeneral %}
+
+<script type="text/javascript">
+
+    function borra(nota) {
+        setTimeout("borrar('"+nota+"')",2500);
+    }
+
+    function borrar(nota) {
+        document.getElementById("nota_"+nota).innerHTML="";
+    }
+    function lista(nota) {
+        if (String(nota).search('/')!=-1) {
+            var notas = nota.split("/");
+            notasLength = notas.length;
+            texto = ""
+            for (i = 0; i < notasLength; i++) {
+                texto = texto + '<a href="/desargar/'+ notas[i] + '.pdf">' + notas[i] + "</a><br>";
+            }
+            document.getElementById("nota_"+nota).innerHTML = texto;
+        }else{
+            document.getElementById("id_"+nota).href="/desargar/"+nota+".pdf";
+        }
+    }  
+
+</script>
+
+{% if message %}
+<div id="nota"><p>{{ message | safe}}</p></div>
+{% endif %}
+
+<h2>FUID</h2>
+{% if RFuid %}
+<table id="lista_tabla">
+    <tr style="text-transform: lowercase">
+        <th rowspan="2">NUMERO DE ORDEN</th>
+        <th rowspan="2">CÓDIGO</th>
+        <th rowspan="2" style="width: 100px; white-space: pre;">NOMBRE DE LAS SERIES, SUBSERIES DOCUMENTALES</th>
+        <th colspan="2">FECHAS EXTREMAS</th>
+        <th colspan="4">UNIDAD DE CONSERVACIÓN</th>
+        <th rowspan="2">N° FOLIOS</th>
+        <th rowspan="2">N° CAJA</th>
+        <th rowspan="2">SOPORTE</th>
+        <th rowspan="2">FRECUENCIA DE CONSULTA</th>
+        <th rowspan="2">NOTAS</th>
+
+    </tr>
+    <tr>
+        <th>Inicial</th>
+        <th>Final</th>
+        <th>Caja</th>
+        <th>Carpeta</th>
+        <th>Tomo</th>
+        <th>Otro</th>
+    </tr>
+    {% for RFuid in RFuid %}
+    <tr>
+        <td>{{ RFuid.num_orden }}</td>
+        <td>{% if not RFuid.codigo == None %}{{ RFuid.codigo }}{% else %}{% endif %}</td>
+        <td>{% if not RFuid.num_serie_sub_asuntos == None %}{{ RFuid.num_serie_sub_asuntos }}{% else %}{% endif %}</td>
+        <td>{% if not RFuid.fecha_extrema_inicio == None %}{{ RFuid.fecha_extrema_inicio |date:'Y/m/d'}}{% else %}{% endif %}</td>
+        <td>{% if not RFuid.fecha_extrema_fin == None %}{{ RFuid.fecha_extrema_fin |date:'Y/m/d'}}{% else %}{% endif %}</td>
+        <td>{% if not RFuid.und_caja == None %}{{ RFuid.und_caja }}{% else %}{% endif %}</td>
+        <td>{% if not RFuid.und_carpeta == None %}{{ RFuid.und_carpeta }}{% else %}{% endif %}</td>
+        <td>{% if not RFuid.und_tomo == None %}{{ RFuid.und_tomo }}{% else %}{% endif %}</td>
+        <td>{% if not RFuid.und_otro == None %}{{ RFuid.und_otro }}{% else %}{% endif %}</td>
+        <td>{% if not RFuid.num_folios == None %}{{ RFuid.num_folios }}{% else %}{% endif %}</td>
+        <td>{% if not RFuid.num_caja == None %}{{ RFuid.num_caja }}{% else %}{% endif %}</td>
+        <td>{% if not RFuid.soporte == None %}{{ RFuid.soporte }}{% else %}{% endif %}</td>
+        <td>{% if not RFuid.frecuencia_consulta == None %}{{ RFuid.frecuencia_consulta }}{% else %}{% endif %}</td>
+        <td><a id="id_{{RFuid.notas}}" href="#" onmouseout="borra('{{RFuid.notas}}')" onmousemove="lista('{{RFuid.notas}}')">{{RFuid.notas}}<label id="nota_{{RFuid.notas}}"></label></a></td>
+        <td><a href="/fuid/actualizar/{{RFuid.num_orden}}/">editar</a></td>
+        <td><a href="/fuid/borrar/{{RFuid.num_orden}}/">borrar</a></td>
+    </tr>
+    {% endfor %}
+    </div>
+
+</table>
+{% else %}
+<p>No se enconto ningun registros Fuid</p>
+{% endif %}
+
+<h2>Indexacion</h2>
+{% if RIndexacion %}
+<table id="lista_tabla">
+    <tr>
+        <th>CODIGO CAJA</th>
+        <th>CODIGO CARPETA</th>
+        <th>FOLIOS</th>
+        <th>NUMERO RADICADO</th>
+        <th>IDENTIFICACION VICTIMA</th>
+        <th>NOMBRE VICTIMA</th>
+        <th>IDENTIFICACION DECLARANTE</th>
+        <th>NOMBRE DECLARANTE</th>
+    </tr>
+    {% for RIndexacion in RIndexacion%}
+    <tr>
+        <td>{% if not RIndexacion.cod_caja  == None %}{{RIndexacion.cod_caja}}{% else %}{% endif %}</td>
+        <td>{% if not RIndexacion.cod_carpeta  == None %}{{RIndexacion.cod_carpeta}}{% else %}{% endif %}</td>
+        <td>{% if not RIndexacion.folios  == None %}{{RIndexacion.folios}}{% else %}{% endif %}</td>
+        <td><a href="/desargar/{{ RIndexacion.num_radicado}}.pdf">{{RIndexacion.num_radicado}}</a></td>
+        <td>{% if not RIndexacion.id_victima  == None %}{{RIndexacion.id_victima}}{% else %}{% endif %}</td>
+        <td>{% if not RIndexacion.nombre_victima  == None %}{{RIndexacion.nombre_victima}}{% else %}{% endif %}</td>
+        <td>{% if not RIndexacion.id_declara  == None %}{{RIndexacion.id_declara }}{% else %}{% endif %}</td>
+        <td>{% if not RIndexacion.nombre_declara  == None %}{{RIndexacion.nombre_declara }}{% else %}{% endif %}</td>
+        <td><a href="/indexacion/actualizar/{{RIndexacion.idindexacion}}/">editar</a></td>
+        <td><a href="/indexacion/borrar/{{RIndexacion.idindexacion}}/">borrar</a></td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p>No se encontro ninguna indexacion</p>
+{% endif %} 
+
+{% if error_message %}
+<div id="error_message">{{ error_message }}</div>
+{% endif %}
+
+{% endblock %}

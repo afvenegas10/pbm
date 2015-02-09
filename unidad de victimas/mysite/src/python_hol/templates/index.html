@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="/static/css/python_hol.css">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    </head>
+    <body>
+        <div id="header">
+            <div id="header_inner" class="fixed">
+                <div id="logo">
+                    <h1>
+                        <span>Unidad para la Atencion <br>y Reparacion Integral
+                            <br>a las Víctimas </span>
+                    </h1>
+                </div>
+
+                <form id="login" name="login" method="post"> {% csrf_token %} 
+                    {% if user.is_authenticated %} bienvenido, {{user.username }}
+                    <a href="/salir/">Salir</a> 
+                    {% else %} 
+                    Usuario:<input type="text" name="username"><br> 
+                    Pass: <input type="password" name="password"><br> 
+                    <input type="submit" name="boton" value="Ingresar"> 
+                    {% endif %}
+                </form>
+                <div id="menu">
+                    <ul>
+                        <li><a href="/">Inicio</a></li> {% if user.is_authenticated %}
+                        <li><a href="/busqueda">Buscar</a></li>
+                        <li><a href="/fuid/listar/">FUID</a></li>
+                        <li><a href="/indexacion/listar/">Indexacion</a></li>
+                        <li><a href="/migracion/excel/">Migracion</a></li>
+                        <li><a href="/usuario/listar">Usuarios</a></li> {% endif %}
+                        <li><a href="/contacto/">Contacto</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div id="main">
+            <div id="main_inner" class="fixed">
+                <br class="clear" />
+                <!--contenido-->
+                <h2>{% block encabezado %}{% endblock %}</h2>
+                <section class='contenido'> {% block contenido %}
+                    {% endblock %} </section>
+            </div>
+        </div>
+        <br>
+        <div id="footer" align="center">
+            <table border="0" height='30' width='520'>
+                <tr>
+                    <td align="right">
+                        <img src="/static/recursos/imagenes/PBM_LOGO.png" width="100px">
+                    </td>
+                    <td align="center"><font size="1"> Calle 28 N 13A 24
+                        Oficina 306 - Torre Empresarial Museo Parque Central <br>Bogotá
+                        D.C. - Colombia PBX: +57 (1) 3819174 <br>info@pbm.com.co 
+                        </font>
+                    </td>
+                    <td align="right">
+                        <img src="/static/recursos/imagenes/EMTEL_LOGO.jpg" height="100px">
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </body>
+</html>

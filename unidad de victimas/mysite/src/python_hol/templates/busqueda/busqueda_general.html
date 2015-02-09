@@ -1,0 +1,33 @@
+{% extends 'busqueda.html' %}
+{% block encabezado %}Busqueda genera{% endblock %}
+
+{% block contenidoBusqueda %}
+<div id="formdiv">
+    <form action="" method="post"> {% csrf_token %}
+        <input type="search" name="buscar" size="100" value="{% if buscar %}{{buscar}}{% endif %}" onchange="javascript:this.value=this.value.toUpperCase();" /> 
+        <button value="buscar">Buscar</button>
+
+        {% if error_message %}        
+        <div id="error_message">
+            {{ error_message }}
+        </div>        
+        {% endif %}
+
+    </form>
+
+    <br>
+    {% block resultadoGeneral %}{% endblock %}
+    <br>
+
+    <font id="nota">
+        <b>Nota: </b> Ingrese la informacion a buscar y seleccione el boton "buscar". Puede hacer busquedas multiples ingresando numeros, fechas, caracteres ej "A 2011/01/01 1 2012/01/01" todos los registros que tengan fechas entre enero primero de 2011 y 2012 y/o que tengan A (en los campos alfabeticos) y/o que tengan 1 (en los campos numericos).
+        <p>
+            <li type="disc">Las busquedas por rango de fecha las puede realizar ingresando dos fechas separadas por un espacio y en el formato yyyy/mm/dd.</li>
+            <li type="disc">Para buscar una fecha puntual solo ingrese una fecha con el fomrato yyyy/mm/dd.</li>
+            <li type="disc">Para reducir los resultados de busque, ingrese informacion completa de un solo campo.</li>
+        </p>
+        <br>
+    </font>
+
+</div>
+{% endblock %}

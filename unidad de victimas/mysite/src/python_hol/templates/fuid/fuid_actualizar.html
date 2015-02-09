@@ -1,0 +1,49 @@
+{% extends 'index.html' %}
+{% block encabezado %}Actualizar fuid{% endblock %}
+{% block contenido %}
+<script>
+    function valores() {
+        document.getElementById("id_codigo").value="{{objeto.codigo}}";
+        document.getElementById("id_num_orden").value="{{objeto.num_orden}}";
+        document.getElementById("id_num_serie_sub_asuntos").value="{{objeto.num_serie_sub_asuntos}}";
+        document.getElementById("id_fecha_extrema_inicio").value="{{objeto.fecha_extrema_inicio|date:'Y-m-d'}}";
+        document.getElementById("id_fecha_extrema_fin").value="{{objeto.fecha_extrema_fin|date:'Y-m-d'}}";
+        document.getElementById("id_und_caja").value="{{objeto.und_caja}}";
+        document.getElementById("id_und_carpeta").value="{{objeto.und_carpeta}}";
+        document.getElementById("id_und_tomo").value="{{objeto.und_tomo}}";
+        document.getElementById("id_und_otro").value="{{objeto.und_otro}}";
+        document.getElementById("id_num_folios").value="{{objeto.num_folios}}";
+        document.getElementById("id_num_caja").value="{{objeto.num_caja}}";
+        document.getElementById("id_soporte").value="{{objeto.soporte}}";
+        document.getElementById("id_frecuencia_consulta").value="{{objeto.frecuencia_consulta}}";
+        document.getElementById("id_notas").value="{{objeto.notas}}";
+        document.getElementById("id_num_orden").disabled = true;        
+    }
+    function mayusculas() {
+        document.getElementById("id_num_serie_sub_asuntos").value = document.getElementById("id_num_serie_sub_asuntos").value.toUpperCase();
+    }
+
+</script>
+
+
+<div id="formdiv">
+    <body onload="valores()" onchange="mayusculas()" onfocus="mayusculas()"> 
+        <form action="" method="post">{% csrf_token %}
+            {{ form.as_p }}
+
+            {% for set in fieldset %}
+            <fieldset><legend>{{ set.legend }}</legend>
+                {% for field in set.fields %}
+                <div>
+                    {{ field }}
+                </div>
+                {% endfor %}
+                {% endfor %}
+            </fieldset>
+
+            <button>Actualizar</button>               
+        </form>
+    </body> 
+
+</div>
+{% endblock %}

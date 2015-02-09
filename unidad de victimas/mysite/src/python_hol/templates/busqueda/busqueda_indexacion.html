@@ -1,0 +1,78 @@
+{% extends 'busqueda.html' %}
+{% block encabezado %}Buscar Indexacion{% endblock %}
+
+{% block contenidoBusqueda %}
+<script>
+    function mayusculas() {
+        document.getElementById("id_nombre_victima").value = document.getElementById("id_nombre_victima").value.toUpperCase();
+        document.getElementById("id_nombre_declara").value = document.getElementById("id_nombre_declara").value.toUpperCase();
+    }
+</script>
+
+<table width="100%" border="0">
+    <tr>
+        <td width="370px" valign="top">
+
+            <form action="" method="post">{% csrf_token %}
+                <body onchange="mayusculas()" onfocus="mayusculas()"> 
+                    {{ form.as_p }}
+                </body>
+                <div align="center">
+                    <button>Buscar</button> 
+                </div>
+            </form>
+
+        </td>
+
+        <td align="center" valign="top">
+
+            <div>
+                {% if RIndexacion %}
+                
+                {% if message %}
+                    <p>{{ message }}</p>
+                {% endif %}
+
+                <table id="lista_tabla">
+                    <tr>
+                        <th>CODIGO CAJA</th>
+                        <th>CODIGO CARPETA</th>
+                        <th>FOLIOS</th>
+                        <th>NUMERO RADICADO</th>
+                        <th>IDENTIFICACION VICTIMA</th>
+                        <th>NOMBRE VICTIMA</th>
+                        <th>IDENTIFICACION DECLARANTE</th>
+                        <th>NOMBRE DECLARANTE</th>
+                    </tr>
+                    {% for RIndexacion in RIndexacion   %}
+                    <tr>
+                        <td>{% if not RIndexacion.cod_caja  == None %}{{RIndexacion.cod_caja}}{% else %}{% endif %}</td>
+                        <td>{% if not RIndexacion.cod_carpeta  == None %}{{RIndexacion.cod_carpeta}}{% else %}{% endif %}</td>
+                        <td>{% if not RIndexacion.folios  == None %}{{RIndexacion.folios}}{% else %}{% endif %}</td>
+                        <td><a href="/desargar/{{ RIndexacion.num_radicado}}.pdf">{{RIndexacion.num_radicado}}</a></td>
+                        <td>{% if not RIndexacion.id_victima  == None %}{{RIndexacion.id_victima}}{% else %}{% endif %}</td>
+                        <td>{% if not RIndexacion.nombre_victima  == None %}{{RIndexacion.nombre_victima}}{% else %}{% endif %}</td>
+                        <td>{% if not RIndexacion.id_declara  == None %}{{RIndexacion.id_declara }}{% else %}{% endif %}</td>
+                        <td>{% if not RIndexacion.nombre_declara  == None %}{{RIndexacion.nombre_declara }}{% else %}{% endif %}</td>
+                        <td><a href="/indexacion/actualizar/{{RIndexacion.cod_carpeta}}/">editar</a></td>
+                        <td><a href="/indexacion/borrar/{{RIndexacion.cod_carpeta}}/">borrar</a></td>
+                    </tr>
+                    {% endfor %}
+                </table>
+
+
+                {% else %}                    
+
+                {% if message %}
+                    <p>{{ message }}</p>
+                {% endif %}
+
+                {% endif %}
+            </div>
+
+        </td>
+    </tr>
+</table>
+
+
+{% endblock %}

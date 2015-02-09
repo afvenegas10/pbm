@@ -1,0 +1,18 @@
+{% extends 'index.html' %}
+{% block encabezado %}Bienvenido{% endblock %}
+
+{% block contenido %}
+<div id="formdiv">
+    Bienvenido a la página de registro y consulta de información en la
+    "Unidad para la atención y reparación integral a las víctimas". <br>Esta
+    aplicación permite buscar y editar registros de indexacion y
+    rotulacion en base al FUID.
+</div>
+
+{% if error_message %}
+<br>
+<div id="error_message">{{ error_message }}</div>
+<br>
+{% endif %} 
+
+{% endblock %}

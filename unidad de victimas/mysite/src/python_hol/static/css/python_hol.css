@@ -1,0 +1,203 @@
+/*estilo de tablas*/
+#lista_tabla {
+    border-collapse: separate;
+    width: auto;
+    border-color: white;
+}
+
+.container {
+  overflow-y: auto;  
+}
+
+#lista_tabla th {
+    font-size: 16px;
+    background-color: #1F75CC;
+    color: white;
+    text-align: center;
+    text-transform: lowercase;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-width: 5px;
+}
+
+#lista_tabla td {
+    vertical-align: text-top;
+    text-align: left;
+    color: balack;
+    font-size: 14px;
+}
+
+#lista_tabla tr:nth-child(even) {
+    background-color: #FFFFFF
+}
+
+#lista_tabla tr:nth-child(odd) {
+    background-color: #EDF3FE
+}
+
+#lista_tabla tr:nth-child(even):hover {
+    background-color: #E8E8E8
+}
+
+#lista_tabla tr:nth-child(odd):hover {
+    background-color: #E8E8E8
+}
+
+/*menu superior*/
+#menu{
+    position: absolute;
+    right: 0em;
+    bottom: 0em;
+}
+
+#menu ul{
+    list-style: none;
+}
+
+#menu li{
+    float: left;
+}
+
+#menu li a{
+    margin-left: 0.5em;
+    display: block;
+    padding: 1.1em 1.4em 1.0em 1.4em;
+    background: white;
+    border: solid 1px #fff;
+    color: #616161;
+    font-weight: bold;
+    font-size: 12px;
+    text-transform: lowercase;
+    text-decoration: none;
+}
+
+/*esquema de paguina*/
+#main{
+    background: #fff url('/static/recursos/imagenes/n2.gif') repeat-x;
+}
+
+#main_inner{
+    width: 85%;
+    margin: 0 auto;
+}
+
+#footer{
+	border-top: dotted 1px #E1E1E1;
+	margin: auto;
+	width:75%;
+    margin-top: 10px;
+    padding-top: 10px;
+}
+
+#header{
+    background: #440000 url('/static/recursos/imagenes/n1.gif') repeat-x;
+    font-size: 12px
+}
+
+
+body{
+    color: #585858;
+    font-size: 16px;
+    font-family: "trebuchet ms", helvetica, sans-serif;
+    margin: 0em;
+}
+
+#header_inner{
+    position: relative;
+    width: 90%;
+    height:122px;
+    margin: 0 auto;
+}
+
+#logo h1{
+    display: inline;
+    color: #fff;
+    font-size: 2.6em;
+}
+
+#login{
+	position: absolute;
+	top: 5px;
+    right: 0px;
+    color: white;
+    text-align: right;    
+    width: 20%;
+}
+
+/*formularios*/
+label{	
+	font-weight:bold;
+	text-align:right;
+	width:140px;
+	float:left;
+}
+
+span.helptext{
+	text-transform: lowercase;
+	color:gray;
+	display:block;
+	font-size:11px;
+	text-align:left;
+	width:175px;
+	padding-left: 140px;
+}
+
+p {
+	display: block;
+	-webkit-margin-before: 1px;
+	-webkit-margin-after: 10px;
+	-webkit-margin-start: 1px;
+	-webkit-margin-end: 1px;
+}
+
+ul.errorlist{	
+    color: red;
+    font-size: 10pt;
+    display: block;
+	list-style-type: disc;
+	-webkit-margin-before: 1em;
+	-webkit-margin-after: 0em;
+	-webkit-margin-start: 0px;
+	-webkit-margin-end: 0px;
+	-webkit-padding-start: 40px;
+	text-align:left;
+	width:150px;
+	padding-left: 150px;
+}
+
+/*textos especciales*/
+#error_message {	
+    color: red;
+    font-size: 10pt;     
+}
+
+#nota {	
+    font-size: 10pt;
+    color: gray;
+}
+
+/*pestañas*/
+#pestana ul li{
+    display: block;    
+    padding: 1.1em 1.4em 1.0em 1.4em;
+    border: solid 1px gray;
+    font-weight: bold;
+    font-size: 12px;
+    text-transform: lowercase;
+    background: white;
+}
+
+#pestana ul {
+    width: 90%;
+    padding: 0;
+    float: left;
+    border-bottom: 1px Solid gray;
+}
+
+#pestana li {
+    display: block;
+    float: left;
+    text-align: center;
+    position: relative;
+    top: 1px;
+}

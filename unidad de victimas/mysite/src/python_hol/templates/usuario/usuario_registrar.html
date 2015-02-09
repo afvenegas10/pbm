@@ -1,0 +1,22 @@
+{% extends 'index.html' %}
+{% block encabezado %}Actualizar usuario{% endblock %} 
+
+{% block contenido %}
+<script>
+    function mayusculas() {
+        document.getElementById("id_nombre_victima").value = document.getElementById("id_nombre_victima").value.toUpperCase();
+        document.getElementById("id_nombre_declara").value = document.getElementById("id_nombre_declara").value.toUpperCase();
+    }
+</script>
+
+<div id="formdiv">
+    <body onchange="mayusculas()" onfocus="mayusculas()"> 
+        <form action="" method="post">{% csrf_token %}
+
+            {{ form.as_p }}
+
+            <button>Guardar</button>               
+        </form>
+    </body> 
+</div>
+{% endblock %}

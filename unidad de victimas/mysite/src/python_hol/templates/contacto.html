@@ -1,0 +1,13 @@
+{% extends 'index.html' %} {% block encabezado %}Contacto{% endblock %}
+
+{% block contenido %}
+<div id="formdiv">
+	PROJECT AND BUSINESS MANAGEMENT S.A.S.<br> <a
+		href="http://app.pbm.com.co/site/">http://app.pbm.com.co/site/</a>
+</div>
+
+{% if error_message %}
+<br>
+<div id="error_message">{{ error_message }}</div>
+<br>
+{% endif %} {% endblock %}
