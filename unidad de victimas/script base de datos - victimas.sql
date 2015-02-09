@@ -14,7 +14,7 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 DROP SCHEMA IF EXISTS `victimas` ;
 CREATE SCHEMA IF NOT EXISTS `victimas` DEFAULT CHARACTER SET utf8 ;
 USE `victimas` ;
-
+/*
 -- -----------------------------------------------------
 -- Table `victimas`.`auth_group`
 -- -----------------------------------------------------
@@ -232,7 +232,7 @@ CREATE TABLE IF NOT EXISTS `victimas`.`python_hol_document` (
 ENGINE = InnoDB
 AUTO_INCREMENT = 6
 DEFAULT CHARACTER SET = utf8;
-
+*/
 
 -- -----------------------------------------------------
 -- Table `victimas`.`r_dominio`
