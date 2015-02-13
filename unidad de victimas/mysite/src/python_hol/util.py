@@ -13,7 +13,6 @@ import sys
 import time
 
 from python_hol.models import RFuid, RIndexacion
-from reportlab.lib.colors import cadetblue
 from python_hol import log
 
 

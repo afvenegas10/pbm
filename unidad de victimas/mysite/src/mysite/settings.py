@@ -84,11 +84,11 @@ USE_TZ = False
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
-    'C:/Users/andres/git/web/mysite/src/python_hol/static/',
+    'C:/Apache24/htdocs/mysite/src/python_hol/static/',
 )
 
 TEMPLATE_DIRS = (
-    'C:/Users/andres/git/web/mysite/src/python_hol/templates/error'
-    'C:/Users/andres/git/web/mysite/src/python_hol/templates/',
-    'C:/Users/andres/git/web/mysite/src/python_hol/templates/busqueda',
+    'C:/Apache24/htdocs/mysite/src/python_hol/templates/error'
+    'C:/Apache24/htdocs/mysite/src/python_hol/templates/',
+    'C:/Apache24/htdocs//mysite/src/python_hol/templates/busqueda',
 )

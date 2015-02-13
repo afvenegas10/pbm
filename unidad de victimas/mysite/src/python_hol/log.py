@@ -7,11 +7,13 @@ Created on 18/11/2014
 import logging
 from datetime import date
 
+
 logging.basicConfig(
                     level=logging.DEBUG,
-                    filename = 'C:/Users/andres/git/'+'web/mysite/log/'+'UndVictimas'+str(date.today())+'.log',
+                    format='%(asctime)s.%(msecs)d %(levelname)s %(module)s - %(funcName)s: %(message)s',
                     datefmt="%Y-%m-%d %H:%M:%S",
-                    format='%(asctime)s.%(msecs)d %(levelname)s %(module)s - %(funcName)s: %(message)s') 
+                    filename = "C:/Apache24/logs/UndVictimas/"+"UndVictimas"+str(date.today())+".log"
+                    )
 
 def error(msg):  
     logging.debug(msg)

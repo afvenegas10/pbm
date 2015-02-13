@@ -43,6 +43,6 @@ urlpatterns = patterns('',
     (r'^admin/', include(admin.site.urls)),
     url(r'^handler401/$', views.handler401, name='401'),
     #---rutas---
-    (r'^static/(?P<path>.*)$', 'django.views.static.serve',{'document_root': 'C:/Users/andres/git/web/mysite/src/python_hol/static'}),
-    (r'^site_templates/(?P<path>.*)$', 'django.views.static.serve',{'document_root': 'C:/Users/andres/git/web/mysite/src/python_hol/templates'}),
+    (r'^static/(?P<path>.*)$', 'django.views.static.serve',{'document_root': 'C:/Apache24/htdocs/mysite/src/python_hol/static'}),
+    (r'^site_templates/(?P<path>.*)$', 'django.views.static.serve',{'document_root': 'C:/Apache24/htdocs/mysite/src/python_hol/templates'}),
 )

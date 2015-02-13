@@ -16,8 +16,6 @@ from python_hol import log
 from itertools import chain
 from datetime import datetime
 from __builtin__ import str
-from reportlab.graphics.widgets.flags import Flag
-
 
 def handler400(request):
     try:
