@@ -8,10 +8,8 @@
         <div id="header">
             <div id="header_inner" class="fixed">
                 <div id="logo">
-                    <h1>
-                        <span>Unidad para la Atencion <br>y Reparacion Integral
-                            <br>a las Víctimas </span>
-                    </h1>
+                    <br>
+                    <a href="http://www.unidadvictimas.gov.co/" ><img src="/static/recursos/imagenes/Logo.png"></a>
                 </div>
 
                 <form id="login" name="login" method="post"> {% csrf_token %} 
@@ -30,7 +28,7 @@
                         <li><a href="/fuid/listar/">FUID</a></li>
                         <li><a href="/indexacion/listar/">Indexacion</a></li>
                         <li><a href="/migracion/excel/">Migracion</a></li>
-                        <li><a href="/usuario/listar">Usuarios</a></li> {% endif %}
+                        <li><a href="/usuario/listar/">Usuarios</a></li> {% endif %}
                         <li><a href="/contacto/">Contacto</a></li>
                     </ul>
                 </div>

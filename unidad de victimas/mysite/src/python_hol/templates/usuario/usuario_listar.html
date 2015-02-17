@@ -4,47 +4,25 @@
 {% block contenido %}
 
 <div id="formdiv">
-	<a href="/usuario/registrar/" class="addlink">Nuevo registro de usuario.</a> 
-    {% if object_list %}
-	<table id="lista_tabla">
-		<tr>
-			<th>usuario</th>
-			<th>nombre</th>
-			<th>apellido</th>
-		</tr>
-		{% for AuthUser in object_list %}
-		<tr>
-			<td>{{AuthUser.username}}</td>
-			<td>{{ AuthUser.first_name }}</td>
-			<td>{{ AuthUser.last_name }}</td>
-			<td><a href="/usuario/actualizar/{{AuthUser.id}}/">editar</a>
-            <a href="/usuario/borrar/{{AuthUser.id}}/">borrar</a></td>
-                
-		</tr>
-		{% endfor %}
-	</table>
-	{% else %}
-	<p>No se encontro nimgun usuario.</p>
-	{% endif %}
-
-    <!-- paguinacion -->
-    {% if is_paginated %}
-    <div class="pagination">
-        <span class="page-links"> 
-            {% if page_obj.has_previous %} 
-            <a href="/fuid/listar?page={{ page_obj.previous_page_number }}">Anterior</a>
-            {% endif %} 
-            <span class="page-current"> Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}. </span> 
-            {% if page_obj.has_next %} 
-            <a href="/fuid/listar?page={{ page_obj.next_page_number }}">Siguiente</a>
-            {% endif %}
-        </span>
-    </div>
-    {% endif %} 
-
-    {% if error_message %}
-    <div id="error_message">{{ error_message }}</div>
+    <a href="/usuario/registrar/" class="addlink">Nuevo usuario.</a><br>
+    {% if objeto %}
+    <table id="lista_tabla">
+        <tr style="text-transform: lowercase">
+            <th >codigo</th>
+            <th >nombre</th>
+        </tr>
+        {% for usuario in objeto %}
+        <tr>
+            <td>{{ usuario.id }}</td>
+            <td>{{ usuario.username }}</td>
+            <td><a href="/usuario/actualizar/{{usuario.id}}/">editar</a>/
+            <td><a href="/usuario/borrar/{{usuario.id}}/">borrar</a></td>
+        </td>
+        </tr>
+        {% endfor %}
+    </table>        
+    {% else %}
+    <p>No se enconto ningun usuario</p>
     {% endif %}
-
 </div>
 {% endblock %}

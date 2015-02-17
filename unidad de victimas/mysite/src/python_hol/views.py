@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.http.response import HttpResponseRedirect, HttpResponse
 from django.template.context import RequestContext
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, redirect, render
 from django.views.generic.list import ListView
 
 from django.contrib.auth import login, authenticate, logout
@@ -636,22 +636,25 @@ def usuario_registrar(request):
     except Exception, e:
         log.error("error_Exception - usuario_registrar: %s" % (e))
 
-
-class usuario_listar(ListView):
+@login_required(login_url='401')            
+def usuario_listar(request):
     try:
-        queryset = AuthUser.objects.all()
-        paginate_by = 15
-        template_name ='usuario/usuario_listar.html'
+        if request.user.is_superuser:       
+            return render_to_response('usuario/usuario_listar.html', {'objeto': AuthUser.objects.all()}, context_instance=RequestContext(request))
+        else:
+            return usuario_actualizar(request, request.user.id)
+        #usuario_actualizar (request, request.user.id)
     except Exception, e:
-        log.error("error_Exception - usuario_listar: %s" % (e))
-
-
+        log.error("error_Exception - usuario_listar: %s" % (e))    
+    
 @login_required(login_url='401')
 def usuario_actualizar(request, pk):
     try:
-        usuario= User.objects.get(id=pk)
+        if request.user.id != pk and not request.user.is_superuser:
+            return handler401(request)
+        usuario = User.objects.get(id = pk)        
         if request.method == 'POST':
-            form = usuarioForm(request.POST, instance=usuario)
+            form = usuarioForm(request.POST, instance=usuario)            
             if form.is_valid():
                 password = form.cleaned_data['password']
                 if not (str(password).startswith('pbkdf2_sha256') and str(password).endswith('=')):
@@ -661,7 +664,7 @@ def usuario_actualizar(request, pk):
                 return render_to_response('proceso_exitoso.html', {'form':form,'message':message}, context_instance=RequestContext(request))
             else:
                 return render_to_response('usuario/usuario_actualizar.html',{'form':form,'objeto':usuario, 'error_message':form.errors}, context_instance=RequestContext(request))
-        else:
+        else:            
             form = usuarioForm()
         return render_to_response('usuario/usuario_actualizar.html', {'form':form,'objeto':usuario}, context_instance=RequestContext(request))
     except Exception, e:

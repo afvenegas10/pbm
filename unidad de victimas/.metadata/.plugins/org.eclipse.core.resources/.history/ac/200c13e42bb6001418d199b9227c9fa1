@@ -1,0 +1,723 @@
+# -*- coding: utf-8 -*-
+from django.http.response import HttpResponseRedirect, HttpResponse
+from django.template.context import RequestContext
+from django.shortcuts import render_to_response, redirect, render
+from django.views.generic.list import ListView
+
+from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+
+from python_hol.forms import fuidForm, documentoForm, indexacionForm, usuarioForm, busquedaForm, usuarioAutenticacionForm
+from python_hol.util import listaExcel, cargaExcel, esNumero, esAlfabetico, esFecha
+from python_hol.models import AuthUser, RFuid, RIndexacion
+from python_hol import log
+
+from itertools import chain
+from datetime import datetime
+from __builtin__ import str
+
+def handler400(request):
+    try:
+        session = usuarioIniciaSesion(request)
+        if str(session).startswith("error_"):
+            return HttpResponseRedirect("/handler401")
+        encabezado = '400'
+        message = 'La pagina no fue encontrada. por favor verifique la ruta a la cual desea acceder he intente de nuevo.'
+        return render_to_response('error/error.html', {"message": message, "encabezado": encabezado},context_instance=RequestContext(request))
+    except Exception, e:
+        log.error("error_Exception - handler400: %s" % (e))
+
+
+def handler403(request):
+    try:
+        session = usuarioIniciaSesion(request)
+        if str(session).startswith("error_"):
+            return HttpResponseRedirect("/handler401")
+        encabezado = '403'
+        message = 'La solicitud que esta haciendo genero una condicion de error en la aplicacion, por favor contacte a la persona encargada de la aplicacion.'
+        return render_to_response('error/error.html', {"message": message, "encabezado": encabezado},context_instance=RequestContext(request))
+    except Exception, e:
+        log.error("error_Exception - handler403: %s" % (e))
+
+
+def handler404(request):
+    try:
+        session = usuarioIniciaSesion(request)
+        if str(session).startswith("error_"):
+            return HttpResponseRedirect("/handler401")
+        encabezado = '404'
+        message = 'La pagina no fue encontrada. por favor verifique la ruta a la cual desea acceder he intente de nuevo.'
+        return render_to_response('error/error.html', {"message": message, "encabezado": encabezado},context_instance=RequestContext(request))
+    except Exception, e:
+        log.error("error_Exception - handler404: %s" % (e))
+
+
+def handler500(request):
+    try:
+        session = usuarioIniciaSesion(request)
+        if str(session).startswith("error_"):
+            return HttpResponseRedirect("/handler401")
+        encabezado = '500'
+        message = 'Ha ocurrido un error de servidor, por favor contacte a la persona encargada del servicio y de la aplicacion.'
+        return render_to_response('error/error.html', {"message": message, "encabezado": encabezado},context_instance=RequestContext(request))
+    except Exception, e:
+        log.error("error_Exception - handler500: %s" % (e))
+
+def handler401(request):
+    try:        
+        session = usuarioIniciaSesion(request)
+        if str(session).startswith("ok"):
+            return HttpResponseRedirect("/")
+        elif str(session).startswith("error_"):
+            return HttpResponseRedirect("/handler401")
+        
+        encabezado = '401'
+        message = 'La solicitud que esta haciendo no pudo ser ejecutada por errores en su usuario, por favor inicie sesion con un usuario y contraseña validos.'
+        return render_to_response('error/error.html', {"message": message, "encabezado": encabezado},context_instance=RequestContext(request))
+    except Exception, e:
+        log.error("error_Exception - handler401: %s" % (e))
+
+#---busqueda---                
+@login_required(login_url='401')
+def busqueda_indexacion(request):
+    try:
+        return render_to_response('busqueda/busqueda_indexacion.html', {"form": form}, context_instance=RequestContext(request))
+    except Exception, e:
+        log.error("error_Exception - busqueda_indexacion: %s" % (e))
+
+@login_required(login_url='401')
+def busqueda_fuid(request):
+    try:
+        if request.method=='POST':
+            form = fuidForm(request.POST)
+            Codigo=request.POST.get('codigo')
+            Num_Orden=request.POST.get('num_orden')
+            Num_Serie_Sub_Asuntos=request.POST.get('num_serie_sub_asuntos')
+            Fecha_Extrema_Inicio=request.POST.get('fecha_extrema_inicio')
+            Fecha_Extrema_Fin=request.POST.get('fecha_extrema_fin')
+            Und_Caja=request.POST.get('und_caja')
+            Und_Carpeta=request.POST.get('und_carpeta')
+            Und_Tomo=request.POST.get('und_tomo')
+            Und_Otro=request.POST.get('und_otro')
+            Num_Folios=request.POST.get('num_folios')
+            Num_Caja=request.POST.get('num_caja')
+            Soporte=request.POST.get('soporte')
+            Frecuencia_Consulta=request.POST.get('frecuencia_consulta')
+            Notas=request.POST.get('notas')
+            
+            try:
+                if str(form.errors['num_orden'][0]).startswith("El registro ya existe"):
+                    form.errors['num_orden'] = ''
+            except:
+                pass
+
+            #cadena  'Codigo:' +str(Codigo)+'Num_Orden:' +str(Num_Orden)+'Num_Serie_Sub_Asuntos:' +str(Num_Serie_Sub_Asuntos)+' Fecha_Extrema_Inicio:' +str(Fecha_Extrema_Inicio)+' Fecha_Extrema_Fin:' +str(Fecha_Extrema_Fin)+' Und_Caja:' +str(Und_Caja)+' Und_Carpeta:' +str(Und_Carpeta)+' Und_Tomo:' +str(Und_Tomo)+' Und_Otro:' +str(Und_Otro)+' Num_Folios:' +str(Num_Folios)+' Num_Caja:' +str(Num_Caja)+' Soporte:' +str(Soporte)+' Frecuencia_Consulta:' +str(Frecuencia_Consulta)+' Notas:' +str(Notas)
+            
+            if Codigo == "" and Num_Orden == "" and Num_Serie_Sub_Asuntos == "" and Fecha_Extrema_Inicio == "" and Fecha_Extrema_Fin =="" and Und_Caja =="" and Und_Carpeta =="" and Und_Tomo =="" and Und_Otro =="" and Num_Folios =="" and Num_Caja =="" and Soporte =="" and Frecuencia_Consulta =="" and Notas =="":
+                message = "No ha ingresado ningun parametros de busqueda."
+            else:
+                resultadoFuid=RFuid.objects.all()
+                flag = True
+                
+                if Fecha_Extrema_Inicio:
+                    if esFecha(Fecha_Extrema_Inicio):
+                        Fecha_Extrema_Inicio = datetime.strptime(Fecha_Extrema_Inicio,"%Y/%m/%d").strftime("%Y-%m-%d")          
+                        resultadoFuid = resultadoFuid.filter(fecha_extrema_inicio = Fecha_Extrema_Inicio)
+                    else:
+                        resultadoFuid = []
+                        flag = False
+                if flag and Fecha_Extrema_Fin:
+                    if esFecha(Fecha_Extrema_Fin):
+                        Fecha_Extrema_Fin = datetime.strptime(Fecha_Extrema_Fin,"%Y/%m/%d").strftime("%Y-%m-%d") 
+                        resultadoFuid = resultadoFuid.filter(fecha_extrema_fin = Fecha_Extrema_Fin)  
+                    else:
+                        resultadoFuid = []
+                        flag = False
+
+                if flag:
+                    if Codigo:
+                        resultadoFuid = resultadoFuid.filter(codigo__contains = Codigo)                                       
+                    if  Num_Serie_Sub_Asuntos:
+                            resultadoFuid = resultadoFuid.filter(num_serie_sub_asuntos__contains=Num_Serie_Sub_Asuntos)
+                    if Num_Orden:
+                        resultadoFuid = resultadoFuid.filter(num_orden__contains = Num_Orden)
+                    if Und_Caja:
+                        resultadoFuid = resultadoFuid.filter(und_caja__contains = Und_Caja)
+                    if Und_Carpeta:
+                        resultadoFuid = resultadoFuid.filter(und_carpeta__contains = Und_Carpeta)
+                    if Und_Tomo:
+                        resultadoFuid = resultadoFuid.filter(und_tomo__contains = Und_Tomo)
+                    if Num_Folios:
+                        resultadoFuid = resultadoFuid.filter(num_folios__contains = Num_Folios)
+                    if Num_Caja:
+                        resultadoFuid = resultadoFuid.filter(num_orden__contains = Num_Caja)
+                    if Soporte:
+                        resultadoFuid = resultadoFuid.filter(soporte__contains = Soporte)
+                    if Frecuencia_Consulta:
+                        resultadoFuid = resultadoFuid.filter(frecuencia_consulta = Frecuencia_Consulta)
+                    if Notas:
+                        resultadoFuid = resultadoFuid.filter(notas__contains = Notas)                                                      
+                
+                message = 'Encontro '+str(len(resultadoFuid))+', registro(s) Fuid.'              
+                if len(resultadoFuid)==0:
+                    message = "No se encontro ningun registro Fuid, con los parametros ingresados."
+                else:
+                    return render_to_response('busqueda/busqueda_fuid.html', {"form": form,'RFuid':resultadoFuid, 'message' : message}, context_instance=RequestContext(request))
+            return render_to_response('busqueda/busqueda_fuid.html', {"form": form, 'message':message}, context_instance=RequestContext(request))        
+        else:
+            form = fuidForm()
+        return render_to_response('busqueda/busqueda_fuid.html',{"form": form},context_instance=RequestContext(request))
+    except Exception, e:
+        log.error("error_Exception - busqueda_fuid: %s" % (e))
+
+
+@login_required(login_url='401')
+def busqueda_indexacion(request):
+    try:
+        if request.method=='POST':
+            form = indexacionForm(request.POST)
+            Cod_Caja =request.POST.get('cod_caja')
+            Cod_Carpeta =request.POST.get('cod_carpeta')
+            Folios =request.POST.get('folios')
+            Num_Radicado =request.POST.get('num_radicado')
+            Id_Victima =request.POST.get('id_victima')
+            Nombre_Victima =request.POST.get('nombre_victima')
+            Id_Declara =request.POST.get('id_declara')
+            Nombre_Declara =request.POST.get('nombre_declara')
+            
+            try:
+                if str(form.errors['cod_carpeta'][0]).startswith("El registro ya existe"):
+                    form.errors['cod_carpeta'] = ''
+            except:
+                pass
+            
+            if Cod_Caja =="" and Cod_Carpeta =="" and Folios =="" and Num_Radicado =="" and Id_Victima =="" and Nombre_Victima =="" and Id_Declara =="" and Nombre_Declara =="":
+                message = "No ha ingresado ningun parametros de busqueda."
+            else:
+                resultadoIndexacion=RIndexacion.objects.all()
+                if  Cod_Caja:
+                    resultadoIndexacion = resultadoIndexacion.filter(cod_caja__contains=Cod_Caja)
+                if Cod_Carpeta:
+                    resultadoIndexacion = resultadoIndexacion.filter(cod_carpeta__contains = Cod_Carpeta)
+                if Folios:
+                    resultadoIndexacion = resultadoIndexacion.filter(folios__contains = Folios)
+                if Num_Radicado:
+                    resultadoIndexacion = resultadoIndexacion.filter(num_radicado__contains = Num_Radicado)
+                if Id_Victima:
+                    resultadoIndexacion = resultadoIndexacion.filter(id_victima__contains = Id_Victima)
+                if Nombre_Victima:
+                    resultadoIndexacion = resultadoIndexacion.filter(nombre_victima__contains = Nombre_Victima)
+                if Id_Declara:
+                    resultadoIndexacion = resultadoIndexacion.filter(id_declara__contains = Id_Declara)
+                if Nombre_Declara:
+                    resultadoIndexacion = resultadoIndexacion.filter(nombre_declara__contains = Nombre_Declara)
+                                
+                message = 'Encontro '+str(len(resultadoIndexacion))+', registro(s) de indexacion.'              
+                if len(resultadoIndexacion)==0:
+                    message = "No se encontro ningun registro de indexacion, con los parametros ingresados."
+                else:
+                    return render_to_response('busqueda/busqueda_indexacion.html', {"form": form,'RIndexacion':resultadoIndexacion, 'message' : message}, context_instance=RequestContext(request))
+            return render_to_response('busqueda/busqueda_indexacion.html', {"form": form, 'message':message}, context_instance=RequestContext(request))        
+        else:
+            form = indexacionForm()
+        return render_to_response('busqueda/busqueda_indexacion.html',{"form": form},context_instance=RequestContext(request))
+    except Exception, e:
+        log.error("error_Exception - busqueda_indexacion: %s" % (e))
+
+
+@login_required(login_url='401')
+def busqueda_general(request):
+    try:
+        if request.method == 'POST':
+            form = busquedaForm(request.POST)
+            if form.is_valid():               
+                buscar0 = form.cleaned_data['buscar']
+                
+                message=''
+                rangoInicio=''
+                rangoFin=''
+                resultadoFuid = []
+                resultadoIndexacion = []
+                
+                if buscar0 == "":
+                    message='Por favor ingresae informacion de busqeda'
+                else:
+                    buscarLista = buscar0.rsplit(' ')
+                    buscarListaLen = len(buscarLista)                                                            
+            
+                    for a in range(0, buscarListaLen):
+                        buscar = buscarLista[a]
+                        if esFecha(buscar):
+                            if rangoInicio == '':
+                                rangoInicio = buscar
+                            elif rangoFin == '':
+                                if rangoInicio > buscar:
+                                    rangoFin = rangoInicio
+                                    rangoInicio = buscar
+                                else:
+                                    rangoFin = buscar
+                        elif esNumero(buscar):
+                            resultadoFuid=list(set(chain(resultadoFuid,
+                                                    RFuid.objects.all().filter(num_orden__contains=buscar) |
+                                                    RFuid.objects.all().filter(und_caja__contains=buscar) |
+                                                    RFuid.objects.all().filter(und_carpeta__contains=buscar) |
+                                                    RFuid.objects.all().filter(num_caja__contains=buscar) |
+                                                    RFuid.objects.all().filter(notas__contains=buscar))))
+                            resultadoIndexacion=list(set(chain(resultadoIndexacion,
+                                                    RIndexacion.objects.all().filter(cod_caja__contains=buscar) |
+                                                    RIndexacion.objects.all().filter(cod_carpeta__contains=buscar) |
+                                                    RIndexacion.objects.all().filter(folios__contains=buscar) |
+                                                    RIndexacion.objects.all().filter(num_radicado__contains=buscar) |
+                                                    RIndexacion.objects.all().filter(id_victima__contains=buscar) |
+                                                    RIndexacion.objects.all().filter(id_declara__contains=buscar))))
+                                                                                                                                                       
+                        elif esAlfabetico(buscar):
+                            resultadoFuid=list(set(chain(resultadoFuid,
+                                                    RFuid.objects.all().filter(num_serie_sub_asuntos__contains=buscar))))
+                            resultadoIndexacion=list(set(chain(resultadoIndexacion,
+                                                    RIndexacion.objects.all().filter(nombre_victima__contains=buscar) |
+                                                    RIndexacion.objects.all().filter(nombre_declara__contains=buscar))))
+                        else:
+                            message = message+'La cadena "'+buscar+'" no se entiende para ser buscada. Tenga en cuenta que puede ser una fecha invalida o esta buscando caracteres no permitidos.<br>' 
+                            log.error('advertencia_TipoDato: No se identifica el tipo de dato para la busqueda:'+buscar)            
+                    if not rangoInicio == "":
+                        rangoInicio = datetime.strptime(rangoInicio,"%Y/%m/%d").strftime("%Y-%m-%d")
+                        if not rangoFin == "":
+                            rangoFin = datetime.strptime(rangoFin,"%Y/%m/%d").strftime("%Y-%m-%d")
+                            resultadoFuid=list(set(chain(resultadoFuid,
+                                                    #__lte <=    __get >    
+                                                    RFuid.objects.all().filter(fecha_extrema_fin__range=(rangoInicio, rangoFin)) |
+                                                    RFuid.objects.all().filter(fecha_extrema_inicio__range=(rangoInicio, rangoFin)))))
+                        else:
+                            resultadoFuid=list(set(chain(resultadoFuid,
+                                                    RFuid.objects.all().filter(fecha_extrema_inicio=rangoInicio))))
+                    #datetime.strptime(dato,"%Y-%m-%d").strftime("%Y/%m/%d")            
+                    message = message+'Se encontraron: '
+                    resultadoFuidLen = len(resultadoFuid)
+                    resultadoIndexacionLen = len(resultadoIndexacion)
+                    if resultadoFuidLen >= 0:
+                        message = message + str(resultadoFuidLen) + ' registros Fuid'
+                        if resultadoIndexacionLen >= 0:
+                            message = message + ' y '
+                    if resultadoIndexacionLen >= 0:
+                        message = message + str(resultadoIndexacionLen) + ' registros de indexacion'
+                    message = message + ' en relacion a los parametros ingresados.'
+
+                return render_to_response('busqueda/resultado_general.html', {'buscar':buscar0,'RFuid':resultadoFuid, 'RIndexacion':resultadoIndexacion, 'message':message}, context_instance=RequestContext(request))
+            else:
+                return render_to_response('busqueda/busqueda_general.html',{'error_message':form.errors}, context_instance=RequestContext(request))
+        else:
+            form = busquedaForm()
+        return render_to_response('busqueda/busqueda_general.html',context_instance=RequestContext(request))
+    except Exception, e:
+        log.error("error_Exception - busqueda_general: %s" % (e))
+
+@login_required(login_url='401')
+def descargar_archivo(request, archivo):       
+    try:
+        error_message=''
+        message = "descarga del archivo "+ archivo
+        #ruta = 'z:/' + archivo
+        ruta = 'C:/Unidad de victimas - documentos/' + archivo
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename='+archivo
+        fichero = open(ruta, 'rb')
+        contenido = fichero.read()
+        fichero.close()
+        response.write(contenido)
+    except Exception, e:
+        log.error("error_Exception - descargar_archivo: %s" % (e))
+        error_message = "error_: El archivo "+ archivo +" no fue encontado en el servidor."
+        return render_to_response('proceso_faillido.html',{'message':message,'error_message':error_message}, context_instance=RequestContext(request))
+    return response
+
+
+#---principal---
+def index(request):
+    try:        
+        session = usuarioIniciaSesion(request)
+        if str(session).startswith("error_"):
+            return HttpResponseRedirect("/handler401")
+        
+        return render_to_response('home.html',context_instance=RequestContext(request))
+    except Exception, e:
+        log.error("error_Exception - index: %s" % (e))
+
+def contacto(request):
+    try:
+        session = usuarioIniciaSesion(request)
+        if str(session).startswith("error_"):
+            return HttpResponseRedirect("/handler401")
+        return render_to_response('contacto.html',context_instance=RequestContext(request))
+    except Exception, e:
+        log.error("error_Exception - contacto: %s" % (e))
+
+
+#---busqueda---                
+@login_required(login_url='401')            
+def busqueda(request):
+    try:
+        if request.method == 'POST':
+            form = busquedaForm(request.POST)
+            if form.is_valid():
+                buscar0 = form.cleaned_data['buscar']            
+                buscarLista = buscar0.rsplit(' ')
+                buscarListaLen = len(buscarLista)
+                resultadoFuid = []
+                resultadoIndexacion = []
+                message=''
+                rangoInicio=''
+                rangoFin=''            
+                for a in range(0, buscarListaLen):
+                    buscar = buscarLista[a]
+                    if esFecha(buscar):
+                        if rangoInicio == '':
+                            rangoInicio = buscar
+                        elif rangoFin == '':
+                            if rangoInicio > buscar:
+                                rangoFin = rangoInicio
+                                rangoInicio = buscar
+                            else:
+                                rangoFin = buscar
+                    elif esNumero(buscar):
+                        resultadoFuid=list(set(chain(resultadoFuid,
+                                                RFuid.objects.all().filter(num_orden__contains=buscar) |
+                                                RFuid.objects.all().filter(und_caja__contains=buscar) |
+                                                RFuid.objects.all().filter(und_carpeta__contains=buscar) |
+                                                RFuid.objects.all().filter(num_caja__contains=buscar) |
+                                                RFuid.objects.all().filter(notas__contains=buscar))))
+                        resultadoIndexacion=list(set(chain(resultadoIndexacion,
+                                                RIndexacion.objects.all().filter(cod_caja__contains=buscar) |
+                                                RIndexacion.objects.all().filter(cod_carpeta__contains=buscar) |
+                                                RIndexacion.objects.all().filter(folios__contains=buscar) |
+                                                RIndexacion.objects.all().filter(num_radicado__contains=buscar) |
+                                                RIndexacion.objects.all().filter(id_victima__contains=buscar) |
+                                                RIndexacion.objects.all().filter(id_declara__contains=buscar))))
+                                                                                                                                                   
+                    elif esAlfabetico(buscar):
+                        resultadoFuid=list(set(chain(resultadoFuid,
+                                                RFuid.objects.all().filter(num_serie_sub_asuntos__contains=buscar))))
+                        resultadoIndexacion=list(set(chain(resultadoIndexacion,
+                                                RIndexacion.objects.all().filter(nombre_victima__contains=buscar) |
+                                                RIndexacion.objects.all().filter(nombre_declara__contains=buscar))))
+                    else:
+                        message = 'La cadena "'+buscar+'" no se entiende para ser buscada. Tenga en cuenta que puede ser una fecha invalida o esta buscando caracteres no permitidos.<br>'+message 
+                        log.error('advertencia_TipoDato: No se identifica el tipo de dato para la busqueda:'+buscar)            
+                if not rangoInicio == "":
+                    rangoInicio = datetime.strptime(rangoInicio,"%Y/%m/%d").strftime("%Y-%m-%d")
+                    if not rangoFin == "":
+                        rangoFin = datetime.strptime(rangoFin,"%Y/%m/%d").strftime("%Y-%m-%d")
+                        resultadoFuid=list(set(chain(resultadoFuid,
+                                                #__lte <=    __get >    
+                                                RFuid.objects.all().filter(fecha_extrema_fin__range=(rangoInicio, rangoFin)) |
+                                                RFuid.objects.all().filter(fecha_extrema_inicio__range=(rangoInicio, rangoFin)))))
+                    else:
+                        resultadoFuid=list(set(chain(resultadoFuid,
+                                                RFuid.objects.all().filter(fecha_extrema_inicio=rangoInicio))))
+                #datetime.strptime(dato,"%Y-%m-%d").strftime("%Y/%m/%d")
+                return render_to_response('busqueda/resultado.html', {'buscar':buscar0,'RFuid':resultadoFuid, 'RIndexacion':resultadoIndexacion, 'message':message}, context_instance=RequestContext(request))
+            else:
+                return render_to_response('busqueda/busqueda.html',{'error_message':form.errors}, context_instance=RequestContext(request))
+        else:
+            form = busquedaForm()
+        return render_to_response('busqueda/busqueda.html', context_instance=RequestContext(request))
+    except Exception, e:
+        log.error("error_Exception - busqueda: %s" % (e))
+
+
+#---indexacion---
+@login_required(login_url='401')
+def indexacion_borrar(request, pk):
+    try:
+        indexacion = RIndexacion.objects.get(cod_carpeta=pk)
+        message="borrar indexacion"
+        if request.method == 'POST':
+            RIndexacion.objects.get(cod_carpeta=pk).delete()            
+            return render_to_response('proceso_exitoso.html', {'message':message}, context_instance=RequestContext(request))
+        else:
+            continuar = '/indexacion/borrar/'
+            cancelar = '/indexacion/listar/'
+        return render_to_response('confirma_proceso.html', {'objeto': indexacion.cod_carpeta,'message':message,'continuar': continuar, 'cancelar': cancelar}, context_instance=RequestContext(request))
+    except Exception, e:
+        log.error("error_Exception - indexacion_borrar: %s" % (e))
+
+class indexacion_listar(ListView):
+    try:
+        queryset = RIndexacion.objects.all().order_by('cod_carpeta')
+        paginate_by = 15
+        template_name ='indexacion/indexacion_listar.html'
+    except Exception, e:
+        log.error("error_Exception - indexacion_listar: %s" % (e))
+
+
+@login_required(login_url='401')
+def indexacion_actualizar(request, pk):
+    try:
+        indexacion = RIndexacion.objects.get(cod_carpeta=pk)
+        if request.method == 'POST':
+            form = indexacionForm(request.POST, instance=indexacion)
+            if form.is_valid():
+                form.save()
+                message="actualizacion de indexacion"
+                return render_to_response('proceso_exitoso.html', {'message':message}, context_instance=RequestContext(request))
+            else:
+                return render_to_response('indexacion/indexacion_actualizar.html',{'form':form, 'object': indexacion, 'error_message':form.errors}, context_instance=RequestContext(request))
+        else:
+            form = indexacionForm()
+        return render_to_response('indexacion/indexacion_actualizar.html', {'form':form, 'objeto' : indexacion}, context_instance=RequestContext(request))
+    except Exception, e:
+        log.error("error_Exception - indexacion_actualizar: %s" % (e))
+
+#---fuid---
+@login_required(login_url='401')
+def fuid_borrar(request, pk):
+    try:
+        fuid = RFuid.objects.get(num_orden=pk)
+        message="borrar FUID"
+        if request.method == 'POST':
+            RFuid.objects.get(num_orden=pk).delete()            
+            return render_to_response('proceso_exitoso.html', {'message':message}, context_instance=RequestContext(request))
+        else:
+            continuar = '/fuid/borrar/'
+            cancelar = '/fuid/listar/'
+        return render_to_response('confirma_proceso.html', {'objeto': fuid.num_orden,'message':message,'continuar': continuar, 'cancelar': cancelar}, context_instance=RequestContext(request))
+    except Exception, e:
+        log.error("error_Exception - fuid_borrar: %s" % (e))
+
+
+@login_required(login_url='401')
+def indexacion_registrar(request):
+    try:
+        if request.method=='POST':
+            form = indexacionForm(request.POST)
+            message = ''
+            if form.is_valid():            
+                try:
+                    form.save()
+                    message="registro indexacion"
+                    return render_to_response('proceso_exitoso.html', {'message':message, "form": form}, context_instance=RequestContext(request))
+                except Exception, e:
+                    log.error("error_Exception - : %s" % (e))
+                    if e[0]== 1048:
+                        message = 'Debe diligenciar el campos "Codigo de carpeta".'                        
+            return render_to_response('indexacion/indexacion_registrar.html',{"form": form, 'message':message, 'error_message':form.errors}, context_instance=RequestContext(request))
+        else:
+            form = indexacionForm()
+        return render_to_response('indexacion/indexacion_registrar.html',{"form": form}, context_instance=RequestContext(request))
+    except Exception, e:
+        log.error("error_Exception - indexacion_registrar: %s" % (e))
+
+
+@login_required(login_url='401')
+def fuid_registrar(request):
+    try:
+        if request.method=='POST':
+            form = fuidForm(request.POST)
+            message = ''
+            if form.is_valid():
+                try:
+                    form.save()
+                    message="registro FUID"
+                    return render_to_response('proceso_exitoso.html', {"form": form,'message':message}, context_instance=RequestContext(request))
+                except Exception, e:
+                    log.error("error_Exception - fuid_registrar.save: %s" % (e))
+                    if e[0]== 1048:
+                        message = 'Debe diligenciar el campos "Numero de orden".'
+            return render_to_response('fuid/fuid_registrar.html',{"form": form, 'message':message, 'error_message':form.errors}, context_instance=RequestContext(request))
+        else:
+            form = fuidForm()
+        return render_to_response('fuid/fuid_registrar.html',{"form": form}, context_instance=RequestContext(request))
+    except Exception, e:
+        log.error("error_Exception - fuid_registrar: %s" % (e))
+
+
+class fuid_listar(ListView):
+    try:
+        queryset = RFuid.objects.all().order_by('num_orden')
+        paginate_by = 15
+        template_name ='fuid/fuid_listar.html'
+    except Exception, e:
+        log.error("error_Exception - fuid_listar: %s" % (e))
+
+
+@login_required(login_url='401')   
+def fuid_actualizar(request, pk):
+    try:
+        fuid = RFuid.objects.get(num_orden=pk)    
+        if request.method == 'POST':
+            form = fuidForm(request.POST, instance=fuid)
+            if form.is_valid():
+                form.save()
+                message="actualizacion de FUID"
+                return render_to_response('proceso_exitoso.html', {'message':message}, context_instance=RequestContext(request))
+            else:
+                return render_to_response('fuid/fuid_actualizar.html',{"form": form, 'error_message':form.errors, 'objeto': fuid}, context_instance=RequestContext(request))
+        else:
+            form = fuidForm()
+        return render_to_response('fuid/fuid_actualizar.html', {"form": form, 'objeto': fuid}, context_instance=RequestContext(request))
+    except Exception, e:
+        log.error("error_Exception - fuid_actualizar: %s" % (e))
+
+
+#---sesion---
+@login_required(login_url='401')
+def usuarioCerrarSesion(request):   
+    try: 
+        logout(request)
+        return HttpResponseRedirect("/")
+    except Exception, e:
+        log.error("error_Exception - usuarioCerrarSesion: %s" % (e))
+
+
+def usuarioIniciaSesion(request):
+    try:
+        message = ""          
+        if request.method == 'POST':
+            form = usuarioAutenticacionForm(request.POST)
+            boton = request.POST.get('boton') 
+            if boton == 'Ingresar':
+                if form.is_valid():                                                    
+                    usuario = request.POST["username"]
+                    password = request.POST["password"]
+                    acceso = authenticate(username=usuario, password=password)
+                    if acceso is not None:
+                        if acceso.is_active:
+                            login(request, acceso)
+                            return HttpResponseRedirect("/")
+                        else:
+                            message = "error_"
+                    else:
+                        message = "error_"
+                else:
+                    message = "error_"        
+        return message                    
+    except Exception, e:
+        log.error("error_Exception - usuarioIniciaSesion: %s" % (e))
+
+
+#---usuarios---
+@login_required(login_url='401')
+def usuario_borrar(request, pk):
+    try:
+        usuario = User.objects.get(id=pk)
+        message="borrar usuario"
+        if request.method == 'POST':
+            User.objects.get(id=pk).delete()            
+            return render_to_response('proceso_exitoso.html', {'message':message}, context_instance=RequestContext(request))
+        else:
+            continuar = '/usuario/borrar/'
+            cancelar = '/usuario/listar/'
+        return render_to_response('confirma_proceso.html', {'objeto': usuario.username,'message':message,'continuar': continuar, 'cancelar': cancelar}, context_instance=RequestContext(request))
+    except Exception, e:
+        log.error("error_Exception - usuario_borrar: %s" % (e))
+
+
+@login_required(login_url='401')
+def usuario_registrar(request):
+    try:
+        if request.method=='POST':
+            form = usuarioForm(request.POST)
+            if form.is_valid():
+                usuario = User.objects.create_user(
+                                                    username=form.cleaned_data['username'],
+                                                    password=form.cleaned_data['password'],
+                                                    first_name=form.cleaned_data['first_name'],
+                                                    last_name=form.cleaned_data['last_name'],
+                                                  )
+                usuario.save()
+                message="registro de usuario"
+                return render_to_response('proceso_exitoso.html', {'message':message}, context_instance=RequestContext(request))
+            else:
+                return render_to_response('usuario/usuario_registrar.html',{"form": form,'error_message':form.errors}, context_instance=RequestContext(request))
+        else:
+            form = usuarioForm()
+        return render_to_response('usuario/usuario_registrar.html',{"form": form}, context_instance=RequestContext(request))
+    except Exception, e:
+        log.error("error_Exception - usuario_registrar: %s" % (e))
+
+class usuario_listar(ListView, request):
+    model = AuthUser    
+    def lista0():
+        try:
+            queryset = AuthUser.objects.all()
+            paginate_by = 15
+            template_name ='usuario/usuario_listar.html'
+        except Exception, e:
+            log.error("error_Exception - usuario_listar: %s" % (e))
+        
+    def lista1 (request):   
+        print str(request.user.is_superuser)
+            
+@login_required(login_url='401')
+def usuario_actualizar(request, pk):
+    if request.user.is_superuser:        
+        return HttpResponseRedirect("/usuario/listar/"+request.user.pk)
+    else:
+        try:        
+            usuario= User.objects.get(id=pk)
+            if request.method == 'POST':
+                form = usuarioForm(request.POST, instance=usuario)            
+                if form.is_valid():
+                    password = form.cleaned_data['password']
+                    if not (str(password).startswith('pbkdf2_sha256') and str(password).endswith('=')):
+                        usuario.set_password(password)
+                    usuario.save()
+                    message="actualizacion de usuario"
+                    return render_to_response('proceso_exitoso.html', {'form':form,'message':message}, context_instance=RequestContext(request))
+                else:
+                    return render_to_response('usuario/usuario_actualizar.html',{'form':form,'objeto':usuario, 'error_message':form.errors}, context_instance=RequestContext(request))
+            else:            
+                form = usuarioForm()
+                
+            print "6"
+            return render_to_response('usuario/usuario_actualizar.html', {'form':form,'objeto':usuario}, context_instance=RequestContext(request))
+        except Exception, e:
+            log.error("error_Exception - usuario_actualizar: %s" % (e))
+
+
+#---migracion---
+@login_required(login_url='/handler401')
+def excel_migrar(request):
+    try:
+        #ruta = "C:/Users/andres/SkyDrive/pbm/Reparacion de victimas/Formato inventario documental - fuid.xlsx"
+        formato1 = "INDEXACIÓN DIGITALIZACIÓN - FORMATO.xlsx"
+        formato2 = "INVENTARIO DOCUMENTAL - FORMATO.xlsx"
+        if request.method == 'POST':
+            form = documentoForm(request.POST)
+            if form.is_valid():
+                ruta = form.cleaned_data['filePath']
+                boton = request.POST.get('boton')
+                #message = excel_listar(ruta)
+                error_message=''
+                if boton == 'Seleccionar':
+                    message = listaExcel(ruta)                
+                    if str(message).startswith("error_"):
+                        indice = str(message).find("</table>")
+                        if indice > 0:
+                            indice = indice + 8                        
+                            error_message = message[indice:len(message)]
+                            message = message[6:indice]
+                        else:
+                            error_message = message
+                            message = ""
+                    else:
+                        error_message=""
+                    return render_to_response('migracion/migrar_excel.html',{'ruta':ruta, 'form': form, 'message':message, 'error_message':error_message}, context_instance=RequestContext(request))
+                elif boton == 'Cargar':
+                    message = cargaExcel(ruta)
+                    if str(message).startswith("error_"):
+                        message = message[6:len(message)]
+                        return render_to_response('migracion/migrar_excel.html',{'ruta':ruta, 'form': form, 'error_message':message}, context_instance=RequestContext(request))
+                    else:
+                        message = message[3:len(message)]               
+                        return render_to_response('proceso_exitoso.html', {'message':message}, context_instance=RequestContext(request))
+                else:
+                    log.info('no se entiende el evento:' + boton)            
+            else:
+                return render_to_response('migracion/migrar_excel.html',{'error_message':form.errors}, context_instance=RequestContext(request))
+        else:
+            form = documentoForm()
+        return render_to_response('migracion/migrar_excel.html',{'formato2': formato2,'formato1': formato1, 'form': form}, context_instance=RequestContext(request))
+    except Exception, e:
+        log.error("error_Exception - excel_migrar: %s" % (e))
