@@ -50,7 +50,7 @@ def listaExcel(rutaArchivo):
             return "error_: La lectura de la hoja fallo."
         
         tabla=[]
-        errors=["error_: la validación de campos ha fallado, por tal razón no se ha cargado ningún registro. Por favor tenga en cuenta las siguientes anotaciones he intente de nuevo"]
+        errors=["error_: la validacion de campos a fallado, por tal razon no se a cargado ningun registro. Por favor tenga en cuenta las siguientes anotaciones he intente de nuevo"]
         #recorre filas
         for b in range(0, nrows):
         #define registro--------------------            
@@ -82,10 +82,10 @@ def listaExcel(rutaArchivo):
                                 dato = datetime.strptime(dato,"%Y-%m-%d %H:%M:%S").strftime("%Y/%m/%d")
                             except Exception, e:
                                 log.error("error_Exception.date: %s" % (e))
-                                errors.append(['error_: fila ' + str(b), 'La lectura del número "'+str(dato)+'" columna:' + str(c) + " fallo, no pudo ser leído como fecha."])
+                                errors.append(['error_: fila ' + str(b), 'La lectura del numero "'+str(dato)+'" columna:' + str(c) + " fallo, no pudo ser leido como fecha."])
                     except Exception, e:
                         log.error("error_Exception - listaExcel.int : %s" % (e))
-                        errors.append(['error_: fila ' + str(b), 'La lectura del número "'+str(dato)+'" columna:' + str(c) + " fallo, no pudo ser leído como número."])  
+                        errors.append(['error_: fila ' + str(b), 'La lectura del numero "'+str(dato)+'" columna:' + str(c) + " fallo, no pudo ser leido como numero."])  
                 #log.info("dato:" + dato)  
                 registro.insert(ncols, dato)
             #log.info("registro:" + str(registro))
@@ -119,7 +119,7 @@ def listaExcel(rutaArchivo):
                                             "FRECUENCIA DE CONSULTA" == registro[12] and
                                             "NOTAS" == registro[13]
                                             ):                    
-                        return "error_: se identifica como INVENTARIO DOCUMENTAL - FORMATO, pero no cumple con el formato, por favor revise los títulos de columna he intente de nuevo."
+                        return "error_: se identifica como INVENTARIO DOCUMENTAL - FORMATO, pero no cumple con el formato, porfavor revise los titulos de columna he intente de nuevo."
                     elif ncols == 8 and not (
                         "CODIGO CAJA" == registro[0] and
                         "CODIGO CARPETA" == registro[1] and      
@@ -130,7 +130,7 @@ def listaExcel(rutaArchivo):
                         "IDENTIFICACION DECLARANTE" == registro[6] and       
                         "NOMBRE DECLARANTE" == registro[7]
                         ):                     
-                        return "error_: se identifica como INDEXACIÓN DIGITALIZACIÓN - FORMATO, pero no cumple con el formato, por favor revise los títulos de columna he intente de nuevo."
+                        return "error_: se identifica como INDEXACIÓN DIGITALIZACIÓN - FORMATO, pero no cumple con el formato, porfavor revise los titulos de columna he intente de nuevo."
                 except Exception, e:
                     log.error("error_Exception - listaExcel.validaFormato: %s" % (e)) 
                                                  
@@ -149,7 +149,7 @@ def listaExcel(rutaArchivo):
 def cargaExcel(rutaArchivo):
     try:
         log.info("cargaExcelInicio"+str(datetime.now()))
-        errors=["error_: La carga de los siguientes registros fallo, los demás fueron cargados exitosamente: "]
+        errors=["error_: La carga de los siguientes resgistros fallo, los demas fueron cargados exitosamente: "]
         
         try:
             workbook = abreLibro(rutaArchivo)
@@ -183,7 +183,7 @@ def cargaExcel(rutaArchivo):
                         dato = dato.encode("utf-8")            
                     except Exception, e:
                         log.error("error_Exception - cargaExcel.encode: %s" % (e))
-                        errors.append(['error_: fila ' + str(b), 'La decodificación del campo "'+str(dato)+'" columna:' + str(c) + " fallo."])
+                        errors.append(['error_: fila ' + str(b), 'La decodificacion del campo "'+str(dato)+'" columna:' + str(c) + " fallo."])
                 else:
                     try:
                         #convierte en enteros los numeros
@@ -196,10 +196,10 @@ def cargaExcel(rutaArchivo):
                                 dato = datetime.strptime(dato,"%Y-%m-%d %H:%M:%S").strftime("%Y/%m/%d")
                             except Exception, e:
                                 log.error("error_Exception - cargaExcel.date: %s" % (e))
-                                errors.append(['error_: fila ' + str(b), 'La lectura del número "'+str(dato)+'" columna:' + str(c) + " fallo, no pudo ser leído como fecha."])
+                                errors.append(['error_: fila ' + str(b), 'La lectura del numero "'+str(dato)+'" columna:' + str(c) + " fallo, no pudo ser leido como fecha."])
                     except Exception, e:
                         log.error("error_Exception - cargaExcel.int: %s" % (e))
-                        errors.append(['error_: fila ' + str(b), 'La lectura del numero "'+str(dato)+'" columna:' + str(c) + " fallo, no pudo ser leído como numero."])  
+                        errors.append(['error_: fila ' + str(b), 'La lectura del numero "'+str(dato)+'" columna:' + str(c) + " fallo, no pudo ser leido como numero."])  
                 #log.info("dato:" + dato)  
                 registro.insert(ncols, dato)
             #log.info("registro:" + str(registro))
@@ -212,7 +212,7 @@ def cargaExcel(rutaArchivo):
                         if str(message).startswith("1062"):
                             errors.append("El registro: " + str(b) + " ya existe.")
                         elif str(message).startswith("1300"):
-                            errors.append("El registro: " + str(b) + " no es válido.")
+                            errors.append("El registro: " + str(b) + " no es valido.")
                         else:
                             log.info(str(message)) 
                             errors.append("El registro: " + str(b) + " no se cargó.")
@@ -227,11 +227,11 @@ def cargaExcel(rutaArchivo):
                         if str(message).startswith("1062"):
                             errors.append("El registro: " + str(b) + " ya existe.")
                         elif str(message).startswith("1300"):
-                            errors.append("El registro: " + str(b) + " no es válido.")
+                            errors.append("El registro: " + str(b) + " no es valido.")
                         else:
                             errors.append("El registro: " + str(b) + " no se cargó.")
                     else:
-                        message = "ok_carga de registros de indexación"
+                        message = "ok_carga de registros de indexacion"
             except Exception, e:
                 log.error("error_Exception - cargaExcel.carga: %s" % (e)) 
         if len(errors) > 1:
@@ -257,21 +257,21 @@ def validaIndexacion(registro, index):
             Nombre_declara = registro[7]            
             
             if not esNumero(Cod_caja):
-                    error.append(campoNoNumerico('"código de caja"',Cod_caja)) 
+                    error.append(campoNoNumerico('"codigo de caja"',Cod_caja)) 
             
             if Cod_carpeta == "":
-                error.append(campoNone('"código carpeta"'))  
+                error.append(campoNone('"codigo carpeta"'))  
             elif not esNumero(Cod_carpeta):
-                error.append(campoNoNumerico('"código de carpeta"',Cod_carpeta))
+                error.append(campoNoNumerico('"codigo de carpeta"',Cod_carpeta))
                           
             if not esNumero(Folios):
-                error.append(campoNoNumerico('"número de folio"', Folios))               
+                error.append(campoNoNumerico('"numero de folio"', Folios))               
             if not esNumero(Num_radicado):
-                error.append(campoNoNumerico('"número de radicado"', Num_radicado))        
+                error.append(campoNoNumerico('"numero de radicado"', Num_radicado))        
             if not esNumero(Id_victima):
-                error.append(campoNoNumerico('"identificación de victima"', Id_victima))        
+                error.append(campoNoNumerico('"identificacion de victima"', Id_victima))        
             if not esNumero(Id_declara):
-                error.append(campoNoNumerico('"identificación de declarante"', Id_declara))
+                error.append(campoNoNumerico('"identificacion de declarante"', Id_declara))
             
             if not esAlfabetico(Nombre_victima):
                 error.append(campoNoAlfabetico('"nombre de la victima"', Nombre_victima))            
@@ -306,27 +306,27 @@ def validaFuid(registro, index):
         Notas = registro[13]
                         
         if Num_orden == "":
-                error.append(campoNone('"número de orden"'))
+                error.append(campoNone('"numero de orden"'))
         elif not esNumero(Num_orden):            
-            error.append(campoNoNumerico('"número de orden"',Num_orden))
+            error.append(campoNoNumerico('"numero de orden"',Num_orden))
             
         if not esNumero(Codigo):            
-            error.append(campoNoNumerico('"código"', Codigo))
+            error.append(campoNoNumerico('"codigo"', Codigo))
         if not  esNumero(Und_tomo):            
-            error.append(campoNoNumerico('"número de tomo de la unidad"', Und_tomo))
+            error.append(campoNoNumerico('"numero de tomo de la unidad"', Und_tomo))
         if not esNumero(Und_otro):            
-            error.append(campoNoNumerico('"número de otro de la unidada"', Und_otro))
+            error.append(campoNoNumerico('"numero de otro de la unidada"', Und_otro))
         if not esNumero(Num_folios):            
-            error.append(campoNoNumerico('"número de folio de la unidada"', Num_folios))
+            error.append(campoNoNumerico('"numero de folio de la unidada"', Num_folios))
         if not esNumero(Und_caja):            
-            error.append(campoNoNumerico('"número de caja de la unidada"',Und_caja))
+            error.append(campoNoNumerico('"numero de caja de la unidada"',Und_caja))
         if not esNumero(Und_carpeta):         
-            error.append(campoNoNumerico('"número de carpeta de la unidada"',Und_carpeta))
+            error.append(campoNoNumerico('"numero de carpeta de la unidada"',Und_carpeta))
         if not esNumero(Num_caja):         
-            error.append(campoNoNumerico('"número de caja"',Num_caja))
+            error.append(campoNoNumerico('"numero de caja"',Num_caja))
         
         if not esAlfabetico(Num_serie_sub_asuntos):     
-            error.append(campoNoAlfabetico('"número de serie, sub-serie, asuntos"', Num_serie_sub_asuntos))      
+            error.append(campoNoAlfabetico('"numero de serie, subserie, asuntos"', Num_serie_sub_asuntos))      
         if not esAlfabetico(Soporte):     
             error.append(campoNoAlfabetico('"soporte"', Soporte))            
         if  not esAlfabetico(Frecuencia_consulta):          
@@ -367,7 +367,7 @@ def insertaIndexacion(registro, index):
         message = validaIndexacion(registro, index)
         if not str(message).startswith("ok_"):
             #log.info('validaIndexacion (no es valido) '+str(index)+' - '+ cadena)
-            return 'error_: 1300 validaIndexacion (no es válido) '+str(index)+' - '+ cadena
+            return 'error_: 1300 validaIndexacion (no es valido) '+str(index)+' - '+ cadena
         
         if Cod_caja == "":
             Cod_caja = None
@@ -432,7 +432,11 @@ def insertaFuid(registro, index):
     
         message = validaFuid(registro, index)
         if not str(message).startswith("ok_"):
-            return 'error_: 1300 validaRegistro (no es válido) '+str(index)+' - '+ cadena
+            return 'error_: 1300 validaRegistro (no es valido) '+str(index)+' - '+ cadena
+    
+        """
+        log.info('inserataFuid - '+ cadena )
+        """
         
         if Num_serie_sub_asuntos == "":
             Num_serie_sub_asuntos = None
@@ -538,7 +542,7 @@ def htmlTabla(tabla):
             lenEncabezado = len(encabezado)
         except Exception, e:
             log.error("error_Exception - htmlTabla.encabezado: %s" % (e))
-            return 'error_: La carga del encabezado del archivo fallo, posiblemente se deba a un registro vacío'
+            return 'error_: La carga del encabezado del archivo fallo. posiblemente se deba a un registro vacio'
 
         htmlTabla =  htmlTabla + '<tr><th>#</th>'
         for a in range(0, lenEncabezado):
@@ -580,7 +584,7 @@ def abreHoja(workbook):
 def abreLibro(rutaArchivo):
     try:
         if not rutaArchivo.endswith(".xlsx"):
-            return "error_: El archivo no tiene la extensión esperada, o la ruta no es interpretable (c:/ruta/archivo.xlsx)"
+            return "error_: El archivo no tiene la extencion esperada, o la ruta no es es interpretable (c:/ruta/archivo.xlsx)"
         if rutaArchivo == None:
             return "error_: Es necesario que ingrese una ruta valida."
         
@@ -603,16 +607,16 @@ def campoNone(msg):
     return("El campo " + str(msg) + ", no puede ser vacio.")
 
 def campoNoNumerico(msg, numero):
-    return("El campo " + str(msg) + ':"'+str(numero)+'", debe ser númerico.')
+    return("El campo " + str(msg) + ':"'+str(numero)+'", debe ser numerico.')
 
 def campoNoAlfabetico(msg, campo):
-    return("El campo " + str(msg) + ':"'+str(campo)+'", debe ser alfabético.')
+    return("El campo " + str(msg) + ':"'+str(campo)+'", debe ser alfabetico.')
 
 def campoNoFecha(msg, fecha):
-    return('El campo ' + str(msg) + ':"'+str(fecha)+'", no es una fecha válida ("AAAA/MM/DD").')
+    return('El campo ' + str(msg) + ':"'+str(fecha)+'", no es una fecha valida ("AAAA/MM/DD").')
 
 def campoNoNota(msg, Notas):
-    return('El campo ' + str(msg)+ ':"' + str(Notas) +  '", no es una nota válida (123 o 123/456/...).')
+    return('El campo ' + str(msg)+ ':"' + str(Notas) +  '", no es una nota valida (123 o 123/456/...).')
 
 #---validaciones de cadenas---
 def esFecha(fecha):

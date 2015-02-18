@@ -4,6 +4,7 @@
         <link rel="stylesheet" type="text/css" href="/static/css/python_hol.css">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     </head>
+
     <body>
         <div id="header">
             <div id="header_inner" class="fixed">
@@ -11,13 +12,12 @@
                     <br>
                     <a href="http://www.unidadvictimas.gov.co/" ><img src="/static/recursos/imagenes/Logo.png"></a>
                 </div>
-
                 <form id="login" name="login" method="post"> {% csrf_token %} 
-                    {% if user.is_authenticated %} bienvenido, {{user.username }}
+                    {% if user.is_authenticated %} Bienvenido, {{user.username }}
                     <a href="/salir/">Salir</a> 
                     {% else %} 
                     Usuario:<input type="text" name="username"><br> 
-                    Pass: <input type="password" name="password"><br> 
+                    Contraseña: <input type="password" name="password"><br> 
                     <input type="submit" name="boton" value="Ingresar"> 
                     {% endif %}
                 </form>
@@ -26,8 +26,8 @@
                         <li><a href="/">Inicio</a></li> {% if user.is_authenticated %}
                         <li><a href="/busqueda">Buscar</a></li>
                         <li><a href="/fuid/listar/">FUID</a></li>
-                        <li><a href="/indexacion/listar/">Indexacion</a></li>
-                        <li><a href="/migracion/excel/">Migracion</a></li>
+                        <li><a href="/indexacion/listar/">Indexación</a></li>
+                        <li><a href="/migracion/excel/">Migración</a></li>
                         <li><a href="/usuario/listar/">Usuarios</a></li> {% endif %}
                         <li><a href="/contacto/">Contacto</a></li>
                     </ul>
@@ -48,32 +48,39 @@
             <table border="0" height='30' width='520'>
                 <tr>
                     <td>    
-                        <p align="right"><font size="1">
-                        UNIDAD PARA LA ATENCION Y REPARACION INTEGRAL A LAS VÍCTIMAS<br>
-                        Sede Administrativa: Aalle 16 # 6-66. edificio Avianca, piso 19, 21, 32<br>
-                        Sbdirección de Valoreación y Registro: Carrera 23 No. 27-34 - Telefono: 3402501<br>
-                        BOGOTÁ, CUNDINAMARCA - COLOMBIA<br>
-                        </font><p>
+                        <p align="right">
+                            <font size="1">
+                                UNIDAD PARA LA ATENCION Y REPARACION INTEGRAL A LAS VÍCTIMAS<br>
+                                Sede Administrativa: Calle 16 # 6-66. Edificio Avianca, piso 19, 21, 32<br>
+                                Subdirección de Valoración y Registro: Carrera 23 No. 27-34 - Teléfono: 3402501<br>
+                                BOGOTÁ, CUNDINAMARCA - COLOMBIA<br>
+                            </font>
+                        <p>
                     </td>
                     <td align="center" bgcolor="#B40404" width="0.01"></td>
                     <td>    
-                        <p align="left"><font size="1">
-                        Línea Nacional de Atencion<br>
-                        01 8000 - 911 119<br>
-                        Lí de Atencion en Bógota<br>
-                        4 261 111
-                        </font><p>
+                        <p align="left">
+                            <font size="1">
+                                Línea Nacional de Atencion<br>
+                                01 8000 - 911 119<br>
+                                Línea de Atencion en Bógota<br>
+                                4 261 111
+                            </font>
+                        <p>
                     </td>                    
                 </tr>
                 <tr>
                     <td colspan="3">
-                        <p align="center"><font size="1">
-                            Desarrolado por: 
-                            <a href="http://www.emtel.net.co/">emtel sa esp</a> – 
-                            <a href="https://pbmsas-public.sharepoint.com/Paginas/Incio.aspx">pbm sas</a>
-                        </font></p>
+                        <p align="center">
+                            <font size="1">
+                                Desarrolado por: 
+                                <a href="http://www.emtel.net.co/">emtel sa esp</a> – 
+                                <a href="https://pbmsas-public.sharepoint.com/Paginas/Incio.aspx">pbm sas</a>
+                            </font>
+                        </p>
                     </td>
                 </tr>
+            </table>
         </div>
     </body>
 </html>

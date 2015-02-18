@@ -1,7 +1,6 @@
 {% extends 'busqueda_fuid.html' %} 
 {% block resultado_fuid %}
 <script type="text/javascript">
-
     function borra(nota) {
         setTimeout("borrar('"+nota+"')",2500);
     }
@@ -9,7 +8,6 @@
     function borrar(nota) {
         document.getElementById("nota_"+nota).innerHTML="";
     }
-    
     function lista(nota) {
         if (String(nota).search('/')!=-1) {
             var notas = nota.split("/");
@@ -25,22 +23,22 @@
     }  
 
 </script>
+
 <div id="formdiv">
     <a href="/fuid/registrar/" class="addlink">Nuevo registro FUID.</a><br>
     {% if object_list %}
     <table id="lista_tabla">
         <tr style="text-transform: lowercase">
-            <th rowspan="2">CÓDIGO</th>
-            <th rowspan="2">NUMERO DE ORDEN</th>
-            <th rowspan="2" style="width: 300px; white-space: pre;">NOMBRE
-                DE LAS SERIES, SUBSERIES DOCUMENTALES</th>
-            <th colspan="2">FECHAS EXTREMAS</th>
-            <th colspan="4">UNIDAD DE CONSERVACIÓN</th>
-            <th rowspan="2">N° FOLIOS</th>
-            <th rowspan="2">N° CAJA</th>
-            <th rowspan="2">SOPORTE</th>
-            <th rowspan="2">FRECUENCIA DE CONSULTA</th>
-            <th rowspan="2">NOTAS</th>
+            <th rowspan="2">Código</th>
+            <th rowspan="2">Número de orden </th>
+            <th rowspan="2" style="width: 300px; white-space: pre;">Nombre de las series, sub-series documentales</th>
+            <th colspan="2">Fechas extremas</th>
+            <th colspan="4">Unidad de conservación</th>
+            <th rowspan="2">N° folio</th>
+            <th rowspan="2">N° caja</th>
+            <th rowspan="2">Soporte</th>
+            <th rowspan="2">Frecuencia de consulta</th>
+            <th rowspan="2">Notas</th>
 
         </tr>
         <tr>
@@ -74,9 +72,8 @@
         {% endfor %}
     </table>
     {% else %}
-    <p>No se enconto ningun registros Fuid</p>
+    <p>No se encontró encontró ningún registrro FUID</p>
     {% endif %}
-
     <!-- paguinacion -->
     {% if is_paginated %}
     <div class="pagination">
@@ -93,11 +90,9 @@
         </span>
     </div>
     {% endif %}
-    
     {% if error_message %}
     <div id="error_message">{{ error_message }}</div>
     {% endif %}
-
 </div>
 {% endblock %}
 

@@ -1,6 +1,5 @@
 {% extends 'busqueda.html' %}
-{% block encabezado %}Buscar Indexacion{% endblock %}
-
+{% block encabezado %}Buscar Indexación{% endblock %}
 {% block contenidoBusqueda %}
 <script>
     function mayusculas() {
@@ -12,7 +11,6 @@
 <table width="100%" border="0">
     <tr>
         <td width="370px" valign="top">
-
             <form action="" method="post">{% csrf_token %}
                 <body onchange="mayusculas()" onfocus="mayusculas()"> 
                     {{ form.as_p }}
@@ -23,26 +21,23 @@
             </form>
 
         </td>
-
         <td align="center" valign="top">
-
             <div>
                 {% if RIndexacion %}
-                
-                {% if message %}
-                    <p>{{ message }}</p>
-                {% endif %}
 
+                {% if message %}
+                <p>{{ message }}</p>
+                {% endif %}
                 <table id="lista_tabla">
                     <tr>
-                        <th>CODIGO CAJA</th>
-                        <th>CODIGO CARPETA</th>
-                        <th>FOLIOS</th>
-                        <th>NUMERO RADICADO</th>
-                        <th>IDENTIFICACION VICTIMA</th>
-                        <th>NOMBRE VICTIMA</th>
-                        <th>IDENTIFICACION DECLARANTE</th>
-                        <th>NOMBRE DECLARANTE</th>
+                        <th>Código caja</th>
+                        <th>Código carpeta</th>
+                        <th>Folios</th>
+                        <th>Numero radicado</th>
+                        <th>Identificación victima</th>
+                        <th>Nombre victima</th>
+                        <th>Identificación declarante</th>
+                        <th>Nombre declarante</th>
                     </tr>
                     {% for RIndexacion in RIndexacion   %}
                     <tr>
@@ -59,20 +54,13 @@
                     </tr>
                     {% endfor %}
                 </table>
-
-
                 {% else %}                    
-
                 {% if message %}
-                    <p>{{ message }}</p>
+                <p>{{ message }}</p>
                 {% endif %}
-
                 {% endif %}
             </div>
-
         </td>
     </tr>
 </table>
-
-
 {% endblock %}

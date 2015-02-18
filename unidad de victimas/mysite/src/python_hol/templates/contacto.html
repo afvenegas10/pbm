@@ -1,15 +1,11 @@
 {% extends 'index.html' %} {% block encabezado %}Contacto{% endblock %}
-
 {% block contenido %}
 <div id="formdiv">
-    
-    
-	
     UNIDAD PARA LA ATENCION Y REPARACION INTEGRAL A LAS VÍCTIMAS<br> 
     <a href="http://www.unidadvictimas.gov.co">www.unidadvictimas.gov.co</a><br>
     <br>
-    Sede Administrativa: Aalle 16 # 6-66. edificio Avianca, piso 19, 21, 32<br> 
-    Sbdirección de Valoreación y Registro: Carrera 23 No. 27-34 - Telefono: 3402501<br> 
+    Sede Administrativa: Calle 16 # 6-66. edificio Avianca, piso 19, 21, 32<br> 
+    Subdirección de Valoración y Registro: Carrera 23 No. 27-34 - Teléfono: 3402501<br> 
     BOGOTÁ, CUNDINAMARCA - COLOMBIA<br> 
     <br> 
     Línea Nacional de Atencion<br> 
@@ -17,9 +13,11 @@
     Lí de Atencion en Bógota<br> 
     4 261 111<br>     
 </div>
-
 {% if error_message %}
 <br>
-<div id="error_message">{{ error_message }}</div>
+<div id="error_message">
+    {{ error_message }}
+</div>
 <br>
-{% endif %} {% endblock %}
+{% endif %}
+{% endblock %}

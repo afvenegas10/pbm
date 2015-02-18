@@ -3,14 +3,11 @@
 {% block contenido %} 
 {% if message %}
 <div id="formdiv">
-    <p>Su procedo de "{{ message }}" se realizo satisfactoriamente.</p>
-
+    <p>Su proceso de "{{ message }}" se realizó satisfactoriamente.</p>
     {% if error_message %}
     <div id="error_message">{{ error_message }}</div>
     <br> {% endif %}
-
     <button onClick="location.href='/'">Continuar</button>
-
 </div>
 {% endif %} 
 {% endblock %}

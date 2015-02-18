@@ -4,6 +4,7 @@
 {% block contenido %}
 <div id="formdiv">
     <form action="" method="post">{% csrf_token %}
+        <p>Por favor ingrese la ruta completa del archivo a migrar ej: "c:/ruta/nombre_archivo.xlsx".</p>
         Archivo: <input type="text" size="100" name=filePath value="{{ruta}}" /><input type="submit" name="boton" value="Seleccionar"><br>
 
         {% if message %}

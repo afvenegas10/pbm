@@ -1,21 +1,16 @@
 {% extends 'busqueda.html' %}
-{% block encabezado %}Buscar Fuid{% endblock %}
-
+{% block encabezado %}Buscar FUID{% endblock %}
 {% block contenidoBusqueda %}
-
 <script>
     function mayusculas() {
         document.getElementById("id_num_serie_sub_asuntos").value = document.getElementById("id_num_serie_sub_asuntos").value.toUpperCase();
     }
-
     function borra(nota) {
         setTimeout("borrar('"+nota+"')",2500);
     }
-
     function borrar(nota) {
         document.getElementById("nota_"+nota).innerHTML="";
     }
-
     function lista(nota) {
         if (String(nota).search('/')!=-1) {
             var notas = nota.split("/");
@@ -28,14 +23,12 @@
         }else{
             document.getElementById("id_"+nota).href="/desargar/"+nota+".pdf";
         }
-    }  
-
+    } 
 </script>
 
 <table width="100%" border="0">
     <tr>
         <td width="370px" valign="top">
-
             <form action="" method="post">{% csrf_token %}
                 <body onchange="mayusculas()" onfocus="mayusculas()"> 
                     {{ form.as_p }}
@@ -44,29 +37,25 @@
                     <button>Buscar</button> 
                 </div>
             </form>
-
         </td>
-
         <td align="center" valign="top">
             <div>
                 {% if RFuid %}
-
                 {% if message %}
                 <p>{{ message }}</p>
                 {% endif %}
-
                 <table id="lista_tabla">
                     <tr style="text-transform: lowercase">
-                        <th rowspan="2">NUMERO DE ORDEN</th>
-                        <th rowspan="2">CÓDIGO</th>
-                        <th rowspan="2" style="width: 100px; white-space: pre;">NOMBRE DE LAS SERIES, SUBSERIES DOCUMENTALES</th>
-                        <th colspan="2">FECHAS EXTREMAS</th>
-                        <th colspan="4">UNIDAD DE CONSERVACIÓN</th>
-                        <th rowspan="2">N° FOLIOS</th>
-                        <th rowspan="2">N° CAJA</th>
-                        <th rowspan="2">SOPORTE</th>
-                        <th rowspan="2">FRECUENCIA DE CONSULTA</th>
-                        <th rowspan="2">NOTAS</th>
+                        <th rowspan="2">Número de orden</th>
+                        <th rowspan="2">Código</th>
+                        <th rowspan="2" style="width: 100px; white-space: pre;">Nombre de las series, sub-series documentales</th>
+                        <th colspan="2">Fechas extremas</th>
+                        <th colspan="4">Unidad de conservació</th>
+                        <th rowspan="2">N° folios</th>
+                        <th rowspan="2">N° caja</th>
+                        <th rowspan="2">Soporte</th>
+                        <th rowspan="2">Frecuencia de consulta</th>
+                        <th rowspan="2">Notas</th>
                     </tr>
                     <tr>
                         <th>Inicial</th>
@@ -97,19 +86,13 @@
                     </tr>
                     {% endfor %}
                 </table>
-                {% else %}                    
-
+                {% else %} 
                 {% if message %}
                 <p>{{ message }}</p>
                 {% endif %}
-
                 {% endif %}
             </div>
-
         </td>
     </tr>
 </table>
-
-
-
 {% endblock %}

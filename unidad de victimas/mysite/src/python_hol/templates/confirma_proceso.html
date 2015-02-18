@@ -1,22 +1,19 @@
 {% extends 'index.html' %} 
-
-{% block encabezado %}Proceso de confirmacion{% endblock %} 
+{% block encabezado %}Proceso de confirmación{% endblock %} 
 {% block contenido %} 
 {% if message %}
 <div id="formdiv">
-	<p>Esta seguro que desea "{{ message }}" {% if objeto %} {{ objeto }} {% endif %} ?.</p>
-
-	{% if error_message %} <br>
-	<div id="error_message">{{ error_message }}</div>
-	<br> {% endif %} {% if continuar %}
-	<form action="" method="post">
-		{% csrf_token %} <br>
-		<input type='submit' value='Continuar'
-			onClick="location.href='{{continuar}}" /> {% if cancelar %} <input
-			type='button' value='Cancelar' onClick="location.href='{{cancelar}}'" />
-		{% endif%}
-	</form>
-	{% endif%}
-
+    <p>Está seguro que desea "{{ message }}" {% if objeto %} {{ objeto }} {% endif %} ?.</p>
+    {% if error_message %} <br>
+    <div id="error_message">{{ error_message }}</div>
+    <br> {% endif %} {% if continuar %}
+    <form action="" method="post">
+        {% csrf_token %} <br>
+        <input type='submit' value='Continuar' onClick="location.href='{{continuar}}" /> 
+        {% if cancelar %} 
+        <input type='button' value='Cancelar' onClick="location.href='{{cancelar}}'" />
+        {% endif%}
+    </form>
+    {% endif%}
 </div>
 {% endif %} {% endblock %}

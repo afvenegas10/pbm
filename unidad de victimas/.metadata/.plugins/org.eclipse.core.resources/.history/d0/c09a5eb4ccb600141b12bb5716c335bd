@@ -636,24 +636,23 @@ def usuario_registrar(request):
     except Exception, e:
         log.error("error_Exception - usuario_registrar: %s" % (e))
 
-
+@login_required(login_url='401')            
 def usuario_listar(request):
-    #str(request.user.is_superuser)
-    return HttpResponse(usuario_listar.as_view())
-
-class usuario_listar(ListView):
     try:
-        queryset = AuthUser.objects.all()
-        paginate_by = 15
-        template_name ='usuario/usuario_listar.html'
+        if request.user.is_superuser:       
+            return render_to_response('usuario/usuario_listar.html', {'objeto': AuthUser.objects.all()}, context_instance=RequestContext(request))
+        else:
+            return usuario_actualizar(request, request.user.id)
+        #usuario_actualizar (request, request.user.id)
     except Exception, e:
-        log.error("error_Exception - usuario_listar: %s" % (e))        
-
+        log.error("error_Exception - usuario_listar: %s" % (e))    
     
 @login_required(login_url='401')
 def usuario_actualizar(request, pk):
-    try:        
-        usuario= User.objects.get(id=pk)
+    try:
+        if request.user.id != pk and not request.user.is_superuser:
+            return handler401(request)
+        usuario = User.objects.get(id = pk)        
         if request.method == 'POST':
             form = usuarioForm(request.POST, instance=usuario)            
             if form.is_valid():
@@ -667,8 +666,6 @@ def usuario_actualizar(request, pk):
                 return render_to_response('usuario/usuario_actualizar.html',{'form':form,'objeto':usuario, 'error_message':form.errors}, context_instance=RequestContext(request))
         else:            
             form = usuarioForm()
-            
-        print "6"
         return render_to_response('usuario/usuario_actualizar.html', {'form':form,'objeto':usuario}, context_instance=RequestContext(request))
     except Exception, e:
         log.error("error_Exception - usuario_actualizar: %s" % (e))

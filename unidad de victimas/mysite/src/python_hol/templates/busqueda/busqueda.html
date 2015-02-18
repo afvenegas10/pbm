@@ -1,22 +1,18 @@
 {% extends 'index.html' %} 
 {% block encabezado %}Busqueda general{% endblock %}
-
 {% block contenido %}
-
 <form action="" method="post"> {% csrf_token %}
     <div id="pestana">
         <ul>
             <li><a href="/busqueda/">General</a></li>
             <li><a href="/busqueda/fuid/">Fuid</a></li>
-            <li><a href="/busqueda/indexacion/">Indexacion</a></li>
+            <li><a href="/busqueda/indexacion/">Indexación</a></li>
         </ul>
         <br>
     </div>
-
     <!--contenido-->
-    {% block contenidoBusqueda %}{% endblock %}   
-
+    {% block contenidoBusqueda %}
+    {% endblock %}   
 </form> 
-
 {% endblock %}
 
